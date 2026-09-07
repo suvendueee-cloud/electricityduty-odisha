@@ -3,1948 +3,1273 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Duty &amp; Interest Ledger</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<title>Odisha Energy Department — Electricity Duty: Policy, Notification &amp; Order Register</title>
+<meta name="description" content="Policies, notifications and orders issued by the Energy Department, Government of Odisha, on Electricity Duty.">
+
+<!--
+  =====================================================================
+  HOW THIS PAGE WORKS (read this if you are maintaining the site)
+  =====================================================================
+  There is no database. Every document is one JavaScript object inside
+  the `documents` array, found below (search for "EDIT YOUR DOCUMENTS").
+  Each object needs a Google Drive link. To add a new document:
+
+    1. Upload the PDF to Google Drive.
+    2. Right-click it → Share → change access to
+       "Anyone with the link" → Viewer.
+    3. Copy the link (looks like
+       https://drive.google.com/file/d/FILE_ID/view?usp=sharing).
+    4. Paste it as the `drive` value of a new entry in the array.
+
+  Nothing else needs to change. The search box, the category filters
+  and the year grouping are all generated automatically from the data
+  in the array. This file can be opened directly in a browser, or
+  uploaded as-is to any static host (GitHub Pages, Netlify, the
+  department's own web server, etc.) — no build step, no server code.
+  =====================================================================
+-->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,500&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Sans+3:wght@400;500;600&display=swap');
-
   :root{
-    --paper:       #F5EFDE;
-    --paper-2:     #EFE6CE;
-    --rule-red:    #8E3B3B;
-    --rule-red-lt: rgba(142,59,59,0.35);
-    --ink:         #1E2A44;
-    --ink-soft:    #4A5470;
-    --maroon:      #5B1F22;
-    --maroon-dark: #431417;
-    --green:       #2F4A3C;
-    --green-dark:  #22362B;
-    --brass:       #9C7A29;
-    --brass-lt:    #C4A24E;
-    --good:        #2F6B3E;
-    --bad:         #A23B2E;
-    --shadow:      0 1px 0 rgba(0,0,0,0.06);
-
-    /* eye-comfort backdrop + a distinct, low-strain tint per section */
-    --backdrop:      #46584F;
-    --settings-bg:    #FBEFC8;
-    --settings-bg-2:  #F3DFA0;
-    --settings-border:#C89A34;
-    --settings-ink:   #4A3A0E;
-    --monthly-bg:     #E9F0F1;
-    --payment-bg:     #EEF3E6;
-    --complete-bg:    #F1ECE3;
-    --howto-bg:       #F6E9DC;
+    --paper:      #F1EEE4;
+    --paper-deep: #E8E3D4;
+    --ink:        #1C1B17;
+    --ink-soft:   #55524A;
+    --teal:       #0D3B3E;
+    --teal-tint:  #E2ECEB;
+    --marigold:   #C1811F;
+    --marigold-tint: #F4E6CC;
+    --rust:       #9C3B2E;
+    --rust-tint:  #F1DDD7;
+    --rule:       #CBB99C;
+    --rule-soft:  #DAD0BB;
+    --focus:      #0D3B3E;
   }
 
   *{ box-sizing: border-box; }
 
-  html,body{
-    margin:0; padding:0;
-    background: var(--backdrop);
-    color: var(--ink);
-    font-family: 'Source Sans 3', system-ui, sans-serif;
-  }
+  html{ scroll-behavior: smooth; }
 
   body{
-    min-height:100vh;
-    padding: 28px 18px 60px;
-  }
-
-  .book{
-    max-width: 1180px;
-    margin: 0 auto;
+    margin:0;
     background: var(--paper);
-    border: 1px solid rgba(0,0,0,0.15);
-    box-shadow: 0 20px 50px rgba(0,0,0,0.45), 0 2px 0 rgba(255,255,255,0.05) inset;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .book::before{
-    /* left binding seam */
-    content:"";
-    position:absolute; top:0; left:0; bottom:0; width:14px;
-    background: linear-gradient(90deg, rgba(0,0,0,0.28), rgba(0,0,0,0.05));
-  }
-
-  /* ---------- Cover band ---------- */
-  .cover{
-    background: linear-gradient(180deg, var(--maroon) 0%, var(--maroon-dark) 100%);
-    color: #F3E7D8;
-    padding: 30px 40px 26px 46px;
-    position: relative;
-  }
-  .cover-eyebrow{
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
-    letter-spacing: 0.06em;
-    color: var(--brass-lt);
-    margin: 0 0 6px;
-  }
-  .cover h1{
-    font-family: 'Source Serif 4', serif;
-    font-weight: 700;
-    font-size: 32px;
-    margin: 0 0 4px;
-    letter-spacing: 0.01em;
-  }
-  .cover .sub{
-    font-size: 15px;
-    color: #D9C6AE;
-    margin: 0;
-  }
-  .cover .sub button{
-    background:none;border:none;color:#EADFC2;text-decoration:underline;
-    cursor:pointer; font: inherit; padding:0;
-  }
-
-  .stat-row{
-    display:flex; flex-wrap:wrap; gap:0;
-    margin: 22px -40px -26px -46px;
-    border-top: 1px solid rgba(255,255,255,0.12);
-  }
-  .stat{
-    flex: 1 1 200px;
-    padding: 16px 22px;
-    border-right: 1px solid rgba(255,255,255,0.12);
-  }
-  .stat:last-child{ border-right:none; }
-  .stat .label{
-    font-family:'IBM Plex Mono', monospace;
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--brass-lt);
-    margin-bottom: 6px;
-  }
-  .stat .value{
-    font-family:'IBM Plex Mono', monospace;
-    font-size: 21px;
-    font-weight: 600;
-    color: #F6EFE2;
-  }
-  .stat .value.bad{ color: #E7A38F; }
-  .stat .value.good{ color: #AEDABE; }
-
-  /* ---------- Settings drawer ---------- */
-  details.settings{
-    border-bottom: 3px solid var(--settings-border);
-    background: linear-gradient(180deg, var(--settings-bg) 0%, var(--settings-bg-2) 100%);
-  }
-  details.settings > summary{
-    cursor:pointer;
-    padding: 16px 46px;
-    font-family:'Source Serif 4', serif;
-    font-size: 17px;
-    font-weight: 700;
-    letter-spacing: 0.01em;
-    color: var(--settings-ink);
-    list-style: none;
-    display:flex; align-items:center; gap:10px;
-  }
-  details.settings > summary::-webkit-details-marker{ display:none; }
-  details.settings > summary::before{
-    content:"⚙"; display:inline-block; font-size:18px; transition: transform .15s ease; color: var(--settings-border);
-  }
-  details.settings[open] > summary::before{ transform: rotate(45deg); }
-  details.settings > summary:hover{ background: rgba(255,255,255,0.25); }
-  .settings-body{
-    padding: 6px 46px 26px;
-    display:grid;
-    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-    gap: 16px 24px;
-    border-top: 1px solid var(--settings-border);
-  }
-  .field label{
-    display:block;
-    font-family:'IBM Plex Mono', monospace;
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--settings-ink);
-    opacity: 0.75;
-    margin-bottom: 5px;
-  }
-  .field input{
-    width:100%;
-    background: #FFFDF6;
-    border: 1px solid var(--settings-border);
-    padding: 8px 10px;
-    font-family:'IBM Plex Mono', monospace;
-    font-size: 14px;
     color: var(--ink);
-  }
-  .field input:focus{ outline:2px solid var(--maroon); outline-offset:1px; }
-  .field.wide{ grid-column: span 2; }
-  .settings-actions{
-    grid-column: 1/-1;
-    display:flex; gap:10px; flex-wrap:wrap;
-    padding-top: 6px;
-  }
-
-  /* ---------- Tabs ---------- */
-  .tabbar{
-    display:flex;
-    padding: 0 46px;
-    background: var(--paper);
-    border-bottom: 2px solid var(--rule-red);
-    gap: 4px;
-  }
-  .tabbar button{
-    font-family:'Source Serif 4', serif;
-    font-size: 15.5px;
-    font-weight: 600;
-    background: var(--paper-2);
-    border: 1px solid var(--rule-red-lt);
-    border-bottom: none;
-    color: var(--ink-soft);
-    padding: 11px 22px 9px;
-    cursor: pointer;
-    position: relative;
-    top: 2px;
-    border-radius: 5px 5px 0 0;
-  }
-  .tabbar button.active{
-    background: var(--paper);
-    color: var(--maroon);
-    border-color: var(--rule-red);
-    border-bottom: 2px solid var(--paper);
-  }
-  .tabbar .spacer{ flex:1; }
-  .tabbar .count{
-    align-self:center;
-    font-family:'IBM Plex Mono', monospace;
-    font-size: 12px;
-    color: var(--ink-soft);
-  }
-
-  /* ---------- Warnings ---------- */
-  #warnings{
-    margin: 16px 46px 0;
-  }
-  .warn{
-    background: #F7E7CF;
-    border: 1px solid var(--brass);
-    border-left: 4px solid var(--brass);
-    color: #5A4413;
-    padding: 10px 14px;
-    font-size: 13px;
-    margin-bottom: 8px;
+    font-family: "IBM Plex Sans", system-ui, sans-serif;
     line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
   }
 
-  /* ---------- Panels ---------- */
-  .panel{ padding: 20px 46px 46px; }
-  .panel[hidden]{ display:none; }
-  #panel-monthly{ background: var(--monthly-bg); }
-  #panel-payment{ background: var(--payment-bg); }
-  #panel-complete{ background: var(--complete-bg); }
-  #panel-howto{ background: var(--howto-bg); }
+  a{ color: inherit; }
 
-  /* ---------- Complete Report: copy-protected view ---------- */
-  #panel-complete, #panel-complete *{
-    user-select: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
+  ::selection{ background: var(--marigold-tint); }
+
+  :focus-visible{
+    outline: 2px solid var(--focus);
+    outline-offset: 3px;
   }
-  #panel-complete{
-    -webkit-touch-callout: none;
+
+  /* ---------- masthead ---------- */
+
+  header.masthead{
+    background: var(--teal);
+    color: #F1EEE4;
+    padding: 2.6rem 1.5rem 2.2rem;
   }
+
+  .masthead-inner{
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
+  }
+
+  .wheel{
+    flex: 0 0 auto;
+    width: 52px;
+    height: 52px;
+  }
+
+  .masthead-text .eyebrow{
+    font-size: 0.82rem;
+    letter-spacing: 0.02em;
+    color: #C9D8D6;
+    margin: 0 0 0.15rem;
+  }
+
+  .masthead-text h1{
+    font-family: "Fraunces", serif;
+    font-weight: 600;
+    font-size: clamp(1.5rem, 3.2vw, 2.05rem);
+    margin: 0 0 0.3rem;
+    letter-spacing: -0.01em;
+  }
+
+  .masthead-text p{
+    margin: 0;
+    color: #D8E2E0;
+    font-size: 0.95rem;
+    max-width: 46ch;
+  }
+
+  /* ---------- toolbar ---------- */
 
   .toolbar{
-    display:flex; align-items:flex-end; gap: 22px; flex-wrap: wrap;
-    margin-bottom: 18px;
-    padding-bottom: 16px;
-    border-bottom: 1px dashed var(--rule-red-lt);
+    max-width: 900px;
+    margin: -1.4rem auto 0;
+    padding: 0 1.5rem;
   }
-  .quickadd{
-    display:flex; align-items:flex-end; gap: 6px; flex-wrap: wrap;
-  }
-  .quickadd .field{ width: 130px; }
-  .quickadd .field input{ padding: 7px 9px; font-size:13px; }
 
-  button.btn{
-    font-family: 'Source Sans 3', sans-serif;
-    font-size: 13.5px;
-    font-weight: 600;
-    padding: 9px 16px;
-    border: 1px solid var(--maroon);
-    background: var(--maroon);
-    color: #F3E7D8;
-    cursor: pointer;
-    letter-spacing: 0.01em;
+  .toolbar-card{
+    background: #FBFAF5;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 1.1rem 1.2rem 1.2rem;
+    box-shadow: 0 10px 24px -18px rgba(13,59,62,0.45);
   }
-  button.btn:hover{ background: var(--maroon-dark); }
-  button.btn.ghost{
-    background: transparent;
-    color: var(--maroon);
-  }
-  button.btn.ghost:hover{ background: rgba(91,31,34,0.08); }
-  button.btn.small{ padding:6px 10px; font-size:12px; }
-  button.btn:disabled{ opacity:0.45; cursor:not-allowed; }
 
-  .toolbar-actions{ margin-left:auto; display:flex; gap:8px; align-items:center; }
+  .search-row{
+    display: flex;
+    gap: 0.7rem;
+    flex-wrap: wrap;
+  }
 
-  /* ---------- Table ---------- */
-  .table-wrap{
-    max-height: 560px;
-    overflow: auto;
-    border: 1px solid var(--rule-red-lt);
-  }
-  table{
-    border-collapse: collapse;
-    width: 100%;
-    font-family:'IBM Plex Mono', monospace;
-    font-size: 12.8px;
-  }
-  thead th{
-    position: sticky; top:0; z-index:2;
-    background: var(--green);
-    color: #EFE7D2;
-    text-align: right;
-    font-weight: 500;
-    padding: 9px 10px;
-    border-right: 1px solid rgba(255,255,255,0.08);
-    white-space: nowrap;
-  }
-  thead th:first-child, thead th:nth-child(2){ text-align:left; }
-  tbody td{
-    padding: 6px 10px;
-    text-align: right;
-    border-right: 1px solid rgba(142,59,59,0.15);
-    border-bottom: 1px solid rgba(142,59,59,0.15);
-    white-space: nowrap;
-  }
-  tbody td:first-child{
-    text-align:left; color: var(--ink-soft);
-    background: rgba(142,59,59,0.05);
-    border-right: 2px solid var(--rule-red-lt);
-    font-size: 11.5px;
-  }
-  tbody td:nth-child(2){ text-align:left; }
-  tbody tr:nth-child(even){ background: rgba(142,59,59,0.035); }
-  tbody tr:hover{ background: rgba(196,162,78,0.16); }
-  tbody tr.inactive td{ color: #B7ADA0; font-style: italic; }
-
-  td.editable input{
-    width: 100%;
-    background: transparent;
-    border: 1px solid transparent;
+  .search-row input[type="search"]{
+    flex: 1 1 260px;
+    padding: 0.6rem 0.8rem;
     font-family: inherit;
-    font-size: inherit;
+    font-size: 0.95rem;
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    background: #fff;
     color: var(--ink);
+  }
+
+  .search-row select{
+    padding: 0.6rem 0.7rem;
+    font-family: inherit;
+    font-size: 0.9rem;
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    background: #fff;
+    color: var(--ink);
+  }
+
+  .chip-row{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.85rem;
+  }
+
+  button.chip{
+    font-family: inherit;
+    font-size: 0.85rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 100px;
+    border: 1px solid var(--rule);
+    background: #fff;
+    color: var(--ink-soft);
+    cursor: pointer;
+  }
+
+  button.chip:hover{ border-color: var(--teal); color: var(--teal); }
+
+  button.chip[aria-pressed="true"]{
+    background: var(--teal);
+    border-color: var(--teal);
+    color: #fff;
+  }
+
+  .result-count{
+    max-width: 900px;
+    margin: 1.4rem auto 0;
+    padding: 0 1.5rem;
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+  }
+
+  /* ---------- register ---------- */
+
+  main{
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0.6rem 1.5rem 3rem;
+  }
+
+  .year-group{ margin-top: 2.4rem; }
+
+  .year-heading{
+    font-family: "Fraunces", serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--teal);
+    margin: 0 0 0.6rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--teal);
+  }
+
+  ul.register{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  li.entry{
+    padding: 1.3rem 0;
+    border-bottom: 1px solid var(--rule-soft);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    column-gap: 1.2rem;
+    align-items: start;
+  }
+
+  li.entry:last-child{ border-bottom: none; }
+
+  .entry-main{ min-width: 0; }
+
+  .entry-meta{
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 0.35rem;
+  }
+
+  .tag{
+    font-size: 0.72rem;
+    padding: 0.14rem 0.55rem;
+    border-radius: 100px;
+    font-weight: 500;
+  }
+
+  .tag.act{ background: var(--teal-tint); color: var(--teal); }
+  .tag.policy{ background: var(--marigold-tint); color: var(--marigold); }
+  .tag.rule{ background: var(--rust-tint); color: var(--rust); }
+  .tag.order{ background: #E6E2F1; color: #4B3E86; }
+  .tag.notification{ background: #E0EAF4; color: #2A5A8C; }
+
+  .date-stamp{
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+  }
+
+  h3.entry-title{
+    font-family: "Fraunces", serif;
+    font-weight: 500;
+    font-size: 1.12rem;
+    margin: 0 0 0.35rem;
+    line-height: 1.3;
+  }
+
+  p.entry-brief{
+    margin: 0;
+    font-size: 0.92rem;
+    color: var(--ink-soft);
+    max-width: 62ch;
+  }
+
+  .entry-action{
+    align-self: center;
     text-align: right;
-    padding: 3px 4px;
-  }
-  td.editable input[type="month"], td.editable input[type="date"]{ text-align:left; }
-  td.editable input:hover{ border-color: rgba(30,42,68,0.25); }
-  td.editable input:focus{ outline:none; border-color: var(--brass); background: #fff; }
-
-  /* Auto-filled date from a bulk Excel upload — shown light until the person confirms/corrects it */
-  td.editable input.date-default{
-    color: #B7ADA0;
-    font-style: italic;
   }
 
-  td.computed{ color: var(--ink-soft); }
-  td.computed.emph{ color: var(--ink); font-weight: 600; }
-  td.computed.zero{ color: #B7ADA0; }
-
-  .rowdel{
-    background:none; border:none; cursor:pointer; color: var(--bad);
-    font-size: 14px; padding: 0 4px; line-height:1;
+  a.download-link{
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    white-space: nowrap;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--teal);
+    text-decoration: none;
+    border: 1px solid var(--teal);
+    padding: 0.45rem 0.85rem;
+    border-radius: 2px;
   }
-  .rowdel:hover{ color: var(--maroon-dark); }
 
-  tfoot td{
-    font-weight: 700;
-    background: var(--paper-2);
-    border-top: 2px solid var(--rule-red);
-    position: sticky; bottom:0;
+  a.download-link:hover{
+    background: var(--teal);
+    color: #fff;
+  }
+
+  a.download-link svg{ flex: 0 0 auto; }
+
+  @media (max-width: 620px){
+    li.entry{
+      grid-template-columns: 1fr;
+      row-gap: 0.7rem;
+    }
+    .entry-action{ text-align: left; }
   }
 
   .empty-state{
-    padding: 40px 20px; text-align:center; color: var(--ink-soft); font-size:14px;
+    padding: 3rem 1rem;
+    text-align: center;
+    color: var(--ink-soft);
   }
 
-  /* ---------- Complete Report: one compact row per payment, adjustment shown as chips beside it ---------- */
-  td.payments-cell{
-    white-space: normal;
-    text-align: left;
-    vertical-align: top;
-    min-width: 460px;
-    padding-top: 6px;
-    padding-bottom: 6px;
+  .empty-state strong{ display:block; color: var(--ink); font-family:"Fraunces",serif; font-size:1.2rem; margin-bottom:0.3rem; font-weight:600;}
+
+  /* ---------- admin guide ---------- */
+
+  details.guide{
+    max-width: 900px;
+    margin: 2.5rem auto 0;
+    padding: 0 1.5rem;
   }
-  th.payments-head{ text-align:left; min-width: 460px; }
-  .pay-row{
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    column-gap: 10px;
-    row-gap: 3px;
-    padding: 4px 0;
-    border-bottom: 1px dashed var(--rule-red-lt);
+
+  details.guide summary{
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: var(--teal);
+    font-weight: 500;
   }
-  .pay-row:last-child{ border-bottom: none; }
-  .pay-main{
-    display: flex;
-    align-items: baseline;
-    gap: 7px;
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-  .pay-date{
+
+  details.guide .guide-body{
+    margin-top: 0.9rem;
+    background: var(--paper-deep);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 1.1rem 1.3rem;
+    font-size: 0.88rem;
     color: var(--ink-soft);
-    font-size: 11.5px;
   }
-  .pay-amount{
-    font-weight: 700;
-    color: var(--maroon);
-    font-size: 12.8px;
+
+  details.guide ol{ padding-left: 1.2rem; margin: 0.5rem 0 0; }
+  details.guide li{ margin-bottom: 0.4rem; }
+  details.guide code{
+    background: #fff;
+    border: 1px solid var(--rule);
+    padding: 0.05rem 0.35rem;
+    border-radius: 2px;
+    font-size: 0.82rem;
   }
-  .adj-tag{
-    font-size: 9.5px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--brass);
-    flex-shrink: 0;
-  }
-  .adj-chips{
+
+  /* ---------- action buttons ---------- */
+
+  .action-bar{
+    max-width: 900px;
+    margin: 1.5rem auto 0;
+    padding: 0 1.5rem;
     display: flex;
+    gap: 0.8rem;
     flex-wrap: wrap;
-    gap: 4px;
   }
-  .adj-chip{
+
+  .action-btn{
+    font-family: "IBM Plex Sans", sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 0.65rem 1.1rem;
+    border-radius: 2px;
+    cursor: pointer;
+    text-decoration: none;
     display: inline-flex;
     align-items: center;
-    gap: 3px;
-    background: rgba(156,122,41,0.13);
-    border: 1px solid rgba(156,122,41,0.45);
+    gap: 0.45rem;
+    border: 1px solid var(--teal);
+  }
+
+  .action-btn.primary{
+    background: var(--teal);
+    color: #fff;
+  }
+
+  .action-btn.primary:hover{ background: #0A2F32; }
+
+  .action-btn.secondary{
+    background: transparent;
+    color: var(--teal);
+  }
+
+  .action-btn.secondary:hover{ background: var(--teal-tint); }
+
+  .action-btn[aria-expanded="true"]{
+    background: #0A2F32;
+    color: #fff;
+  }
+
+  /* ---------- about section ---------- */
+
+  section.about-section{
+    max-width: 900px;
+    margin: 1.4rem auto 0;
+    padding: 0 1.5rem;
+  }
+
+  section.about-section[hidden]{ display: none; }
+
+  .about-card{
+    background: #FBFAF5;
+    border: 1px solid var(--rule);
     border-radius: 3px;
-    padding: 1px 6px;
-    font-size: 10.5px;
-    color: var(--settings-ink);
-    white-space: nowrap;
-  }
-  .adj-chip.zero{ opacity: 0.4; }
-  .adj-chip .k{
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
-    font-weight: 700;
-    color: var(--brass);
-    font-size: 9px;
-  }
-  .no-payments{ color: #B7ADA0; font-style: italic; font-size: 12px; }
-  .ic-chip{ display: none; }
-
-  /* ---------- Closing / Outstanding summary, below the Complete Report table ---------- */
-  .closing-summary{
-    margin-top: 22px;
-    border: 1px solid var(--rule-red);
-    background: var(--paper-2);
-  }
-  .closing-summary .cs-title{
-    font-family: 'Source Serif 4', serif;
-    font-weight: 700;
-    font-size: 15px;
-    color: var(--maroon);
-    padding: 12px 18px;
-    border-bottom: 1px dashed var(--rule-red-lt);
-  }
-  .closing-summary .cs-block{
-    padding: 14px 18px;
-  }
-  .closing-summary .cs-block + .cs-block{
-    border-top: 1px dashed var(--rule-red-lt);
-  }
-  .closing-summary .cs-row{
-    display: flex; justify-content: space-between; align-items: baseline;
-    gap: 12px; flex-wrap: wrap;
-  }
-  .closing-summary .cs-row.cs-main .cs-label{
-    font-family: 'Source Sans 3', sans-serif;
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--ink);
-  }
-  .closing-summary .cs-row.cs-main .cs-value{
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--maroon);
-  }
-  .closing-summary .cs-sub{
-    margin-top: 8px;
-    padding-left: 4px;
-    border-left: 2px solid var(--brass);
-  }
-  .closing-summary .cs-sub .cs-row{ padding: 3px 0 3px 10px; }
-  .closing-summary .cs-sub .cs-label{
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12.5px;
-    color: var(--ink-soft);
-  }
-  .closing-summary .cs-sub .cs-value{
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--ink);
-  }
-  .closing-summary .cs-formula{
-    margin-top: 4px;
-    padding-left: 4px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    color: var(--ink-soft);
-  }
-  .closing-summary .cs-empty{
-    padding: 16px 18px;
-    color: var(--ink-soft);
-    font-size: 13.5px;
+    padding: 1.4rem 1.5rem 1.6rem;
   }
 
-  /* ---------- How to do — usage guide ---------- */
-  .howto{
+  .about-card h2{
+    font-family: "Fraunces", serif;
+    font-weight: 600;
+    font-size: 1.3rem;
+    margin: 0 0 0.9rem;
+    color: var(--teal);
+  }
+
+  .about-card h3{
+    font-family: "Fraunces", serif;
+    font-weight: 500;
+    font-size: 1.02rem;
+    margin: 1.1rem 0 0.35rem;
+    color: var(--ink);
+  }
+
+  .about-card h3:first-of-type{ margin-top: 0; }
+
+  .source-links{
     display: grid;
-    gap: 18px;
-  }
-  .howto-card{
-    background: #FFFCF6;
-    border: 1px solid var(--rule-red-lt);
-    border-left: 4px solid var(--maroon);
-    padding: 18px 22px;
-  }
-  .howto-card h3{
-    font-family: 'Source Serif 4', serif;
-    font-weight: 700;
-    font-size: 17px;
-    color: var(--maroon);
-    margin: 0 0 10px;
-  }
-  .howto-card p{
-    font-size: 14px;
-    line-height: 1.65;
-    color: var(--ink);
-    margin: 0 0 10px;
-  }
-  .howto-card p:last-child{ margin-bottom: 0; }
-  .howto-card ul{
-    margin: 0 0 10px;
-    padding-left: 22px;
-  }
-  .howto-card ul:last-child{ margin-bottom: 0; }
-  .howto-card li{
-    font-size: 14px;
-    line-height: 1.6;
-    color: var(--ink);
-    margin-bottom: 6px;
-  }
-  .howto-card li:last-child{ margin-bottom: 0; }
-  .howto-card strong{ color: var(--maroon); font-weight: 700; }
-  .howto-card code{
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12.5px;
-    background: var(--paper-2);
-    border: 1px solid var(--rule-red-lt);
-    padding: 1px 5px;
-    border-radius: 3px;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.9rem;
+    margin-bottom: 1.4rem;
   }
 
-  .foot-note{
-    margin-top: 14px;
-    font-size: 12px;
+  @media (max-width: 600px){
+    .source-links{ grid-template-columns: 1fr; }
+  }
+
+  .source-link-card{
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    text-decoration: none;
+    background: var(--paper-deep);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--marigold);
+    border-radius: 2px;
+    padding: 0.95rem 1.1rem;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+
+  .source-link-card:hover{
+    background: var(--marigold-tint);
+    border-left-color: var(--teal);
+  }
+
+  .source-link-tag{
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    color: var(--marigold);
+  }
+
+  .source-link-title{
+    font-family: "Fraunces", serif;
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--ink);
+    line-height: 1.3;
+  }
+
+  .source-link-desc{
+    font-size: 0.82rem;
     color: var(--ink-soft);
-    line-height: 1.6;
-  }
-  .print-only-note{ display: none; }
-  .print-only-opening{ display: none; }
-
-  input[type="file"]{ display:none; }
-
-  ::-webkit-scrollbar{ width:11px; height:11px; }
-  ::-webkit-scrollbar-track{ background: var(--paper-2); }
-  ::-webkit-scrollbar-thumb{ background: var(--rule-red-lt); border-radius:0; }
-
-  @media (max-width: 720px){
-    body{ padding: 10px; }
-    .cover{ padding: 22px 18px 18px 22px; }
-    .stat-row{ margin: 18px -18px -18px -22px; }
-    .tabbar{ padding: 0 18px; }
-    .panel{ padding: 16px 18px 32px; }
-    details.settings > summary{ padding: 12px 18px; }
-    .settings-body{ padding: 4px 18px 18px; }
-    #warnings{ margin: 16px 18px 0; }
   }
 
-  @media (prefers-reduced-motion: reduce){
-    * { transition: none !important; }
+  .source-link-cta{
+    font-size: 0.83rem;
+    font-weight: 600;
+    color: var(--teal);
+    margin-top: 0.3rem;
   }
 
-  /* ---------- Print / Save as PDF (used for the Complete Report) ---------- */
-  @page{ size: landscape; margin: 16mm 10mm 12mm; }
-  @media print{
-    html, body{ background: #fff; padding: 0; margin: 0; width: auto; }
-    .book{ box-shadow: none; border: none; max-width: none; width: 100%; }
-    .book::before{ display: none; }
+  /* ---------- chronology timeline ---------- */
 
-    /* Any print not started via the "Save as PDF" button renders blank instead
-       of the real report (see the print-lock script). */
-    body.print-blocked *{ visibility: hidden !important; }
-    body.print-blocked::before{
-      content: "Printing is disabled on this page. Open the Complete Report tab and use the \"Save as PDF\" button to generate a PDF.";
-      visibility: visible !important;
-      position: fixed;
-      top: 40%;
-      left: 5%;
-      right: 5%;
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 16px;
-      font-weight: 700;
-      color: #000;
-      text-align: center;
-    }
+  .chrono-source{
+    font-size: 0.85rem;
+    font-style: italic;
+    color: var(--ink-soft);
+    margin: -0.3rem 0 1.2rem;
+  }
 
-    /* Copy-protection is a screen-only feature; some print engines render
-       user-select:none content unreliably, so relax it for the printed page. */
-    #panel-complete, #panel-complete *{
-      user-select: auto !important;
-      -webkit-user-select: auto !important;
-      -moz-user-select: auto !important;
-      -ms-user-select: auto !important;
-    }
+  ol.chronology{
+    list-style: none;
+    margin: 0 0 1.8rem;
+    padding: 0 0 0 1.6rem;
+    border-left: 2px solid var(--rule);
+  }
 
-    .cover{
-      background: #fff !important;
-      padding: 10px 14px 10px;
-      border: 2px solid #000 !important;
-      margin: 0 0 8px;
-      overflow: visible;
-    }
-    .cover-eyebrow{ color: #000 !important; font-weight: 700; font-size: 9.6px; }
-    .cover h1{ font-size: 20px; color: #000 !important; margin: 0 0 3px; }
-    .cover .sub{ font-size: 11px; color: #000 !important; font-weight: 600; }
-    .cover .sub strong{ color: #000 !important; }
-    #openSettingsBtn{ display: none !important; }
+  li.chrono-item{
+    position: relative;
+    padding-bottom: 1.8rem;
+  }
 
-    .stat-row{
-      margin: 8px 0 0;
-      border-top: 1.5px solid #000;
-    }
-    .stat{ padding: 6px 8px; border-right-color: #000 !important; }
-    .stat .label{ font-size: 8px; color: #000 !important; font-weight: 700; }
-    .stat .value{ font-size: 12.5px; color: #000 !important; font-weight: 700 !important; }
-    .stat .value.bad, .stat .value.good{ color: #000 !important; }
+  li.chrono-item:last-child{ padding-bottom: 0.4rem; }
 
-    details.settings{ display: none !important; }
-    .tabbar{ display: none !important; }
-    #warnings{ display: none !important; }
-    .toolbar{ display: none !important; }
-    .panel[hidden]{ display: none !important; }
-    .panel{ padding: 8px 6px 12px; background: #fff !important; }
+  li.chrono-item::before{
+    content: "";
+    position: absolute;
+    left: -1.86rem;
+    top: 0.3rem;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: var(--marigold);
+    border: 2px solid var(--paper);
+    box-shadow: 0 0 0 1px var(--marigold);
+  }
 
-    .table-wrap{
-      max-height: none; overflow: visible; border: 2px solid #000;
-      width: 100%;
-    }
-    table{
-      width: 100%;
-      table-layout: fixed;
-      font-size: 12.8px;
-    }
-    thead th{
-      position: static;
-      padding: 8px 6px;
-      font-size: 12.2px;
-      font-weight: 700;
-      white-space: normal;
-      word-break: break-word;
-      line-height: 1.3;
-      background: #fff !important;
-      color: #000 !important;
-      border-bottom: 2px solid #000 !important;
-      border-right-color: #000 !important;
-    }
-    tfoot td{ position: static; }
-    tbody td, tfoot td{
-      padding: 7px 6px;
-      white-space: normal;
-      word-break: break-word;
-      overflow-wrap: anywhere;
-      color: #000 !important;
-      font-weight: 700 !important;
-      border-color: #000 !important;
-    }
-    tbody tr:nth-child(even){ background: rgba(0,0,0,0.04) !important; }
-    tbody tr.inactive td{ color: #000 !important; font-weight: 600 !important; }
-    tfoot td{ background: #eee !important; border-top: 2px solid #000 !important; }
-    /* By default <tfoot> repeats on every printed page like a footer; force it to behave
-       as a normal row group so the totals only appear once, after the last data row. */
-    #completeTable tfoot{ display: table-row-group; }
+  .chrono-date{
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--marigold);
+    letter-spacing: 0.01em;
+    margin-bottom: 0.25rem;
+    line-height: 1.3;
+  }
 
-    td.payments-cell, th.payments-head{ min-width: 0; width: auto; }
-    .pay-row{ padding: 4px 0; column-gap: 8px; row-gap: 4px; border-bottom-color: #000; }
-    .pay-main{ gap: 6px; }
-    .pay-date{ font-size: 11px; color: #000 !important; font-weight: 700 !important; }
-    .pay-amount{ font-size: 12.8px; color: #000 !important; font-weight: 700 !important; }
-    .adj-tag{ font-size: 10.4px; color: #000 !important; font-weight: 700 !important; }
-    .adj-chip{
-      padding: 2px 6px; font-size: 11.2px;
-      border: 1.5px solid #000 !important;
-      background: #fff !important;
-      color: #000 !important;
-      font-weight: 700 !important;
-      opacity: 1 !important;
-    }
-    .adj-chip .k{ font-size: 9.8px; color: #000 !important; font-weight: 700 !important; }
-    td.computed.zero{ color: #000 !important; }
-    .no-payments{ color: #000 !important; font-weight: 700 !important; }
+  .chrono-eff{
+    font-weight: 500;
+    color: var(--ink-soft);
+    font-size: 0.74rem;
+  }
 
-    /* Int. Carry, shown as a small chip tucked under Total Interest instead of its own column */
-    td.computed.emph{ white-space: normal; }
-    .ic-chip{
-      display: block;
-      margin-top: 3px;
-      font-size: 8.6px;
-      font-weight: 700;
-      color: #000;
-      border: 1px solid #000;
-      border-radius: 3px;
-      padding: 1px 4px;
-      background: #fff;
-    }
-    .ic-chip b{ font-weight: 700; }
+  .chrono-title{
+    font-family: "Fraunces", serif;
+    font-weight: 600;
+    font-size: 1.04rem;
+    color: var(--ink);
+    margin-bottom: 0.45rem;
+  }
 
-    /* Hide the serial No, Adjusted Interest, Int. Carry, and Outstanding columns in print to free up room for larger text */
-    #completeTable th:nth-child(1), #completeTable td:nth-child(1),
-    #completeTable th:nth-child(6), #completeTable td:nth-child(6),
-    #completeTable th:nth-child(7), #completeTable td:nth-child(7),
-    #completeTable th:nth-child(11), #completeTable td:nth-child(11){
-      display: none !important;
-    }
+  .chrono-body p{
+    margin: 0 0 0.5rem;
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+  }
 
-    /* Give the Payment column the lion's share of the remaining width; keep others compact */
-    #completeTable th:nth-child(2), #completeTable td:nth-child(2){ width: 8%; }
-    #completeTable th:nth-child(3), #completeTable td:nth-child(3){ width: 9%; }
-    #completeTable th:nth-child(4), #completeTable td:nth-child(4){ width: 9%; }
-    #completeTable th:nth-child(5), #completeTable td:nth-child(5){ width: 9%; }
-    #completeTable th:nth-child(8), #completeTable td:nth-child(8){ width: 9%; }
-    #completeTable th:nth-child(9), #completeTable td:nth-child(9){ width: 42%; }
-    #completeTable th:nth-child(10), #completeTable td:nth-child(10){ width: 14%; }
+  .chrono-body ul{
+    margin: 0 0 0.5rem;
+    padding-left: 1.1rem;
+  }
 
-    a[href]::after{ content: ""; }
+  .chrono-body li{
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+    margin-bottom: 0.3rem;
+  }
 
-    #panel-complete > .foot-note{ display: none !important; }
-    #panel-complete > .print-only-note{
-      display: block !important;
-      font-size: 9px;
-      color: #000 !important;
-      font-weight: 700 !important;
-      margin-top: 6px;
-    }
+  .chrono-body table{
+    margin-top: 0.4rem;
+  }
 
-    .print-only-opening{
-      display: flex !important;
-      flex-direction: column;
-      gap: 6px;
-      border: 2px solid #000;
-      padding: 8px 12px;
-      margin: 0 0 10px;
-      font-family: 'IBM Plex Mono', monospace;
-    }
-    .print-only-opening .ov-title{
-      font-size: 9px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      font-weight: 700;
-      color: #000;
-      border-bottom: 1px solid #000;
-      padding-bottom: 4px;
-    }
-    .print-only-opening .ov-items{
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px 26px;
-    }
-    .print-only-opening .ov-item{ min-width: 130px; }
-    .print-only-opening .ov-label{
-      display: block;
-      font-size: 8.6px;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: #000;
-      font-weight: 700;
-      opacity: 1;
-      margin-bottom: 2px;
-    }
-    .print-only-opening .ov-value{
-      font-size: 12.5px;
-      color: #000;
-      font-weight: 700;
-    }
+  .chrono-body h4{
+    font-family: "IBM Plex Sans", sans-serif;
+    font-size: 0.86rem;
+    font-weight: 600;
+    color: var(--teal);
+    margin: 1rem 0 0.4rem;
+  }
 
-    .closing-summary{
-      border: 2px solid #000 !important;
-      background: #fff !important;
-      break-inside: avoid;
-      page-break-inside: avoid;
-    }
-    .closing-summary .cs-title{
-      color: #000 !important;
-      border-bottom: 1.5px solid #000 !important;
-      font-size: 13.5px;
-      padding: 8px 12px;
-    }
-    .closing-summary .cs-block{ padding: 8px 12px; }
-    .closing-summary .cs-row.cs-main .cs-label{ color: #000 !important; font-size: 11.8px; font-weight: 700 !important; }
-    .closing-summary .cs-row.cs-main .cs-value{ color: #000 !important; font-size: 14.5px; }
-    .closing-summary .cs-sub{ border-left-color: #000 !important; }
-    .closing-summary .cs-sub .cs-label{ color: #000 !important; font-weight: 700 !important; font-size: 10.8px; }
-    .closing-summary .cs-sub .cs-value{ color: #000 !important; font-size: 11.8px; }
-    .closing-summary .cs-formula{ color: #000 !important; font-size: 9.6px; font-weight: 700; }
+  .chrono-note{
+    background: var(--teal-tint);
+    border-left: 3px solid var(--teal);
+    border-radius: 2px;
+    padding: 0.75rem 1rem;
+    font-size: 0.85rem;
+    color: var(--ink);
+    margin-top: 0.6rem;
+  }
+
+  .chrono-summary{
+    background: var(--marigold-tint);
+    border-left: 3px solid var(--marigold);
+    border-radius: 2px;
+    padding: 1rem 1.2rem;
+    margin-top: 0.8rem;
+    font-size: 0.9rem;
+    color: var(--ink);
+  }
+
+
+  .about-card p{
+    margin: 0 0 0.4rem;
+    font-size: 0.92rem;
+    color: var(--ink-soft);
+    max-width: 68ch;
+  }
+
+  .about-card table{
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.5rem 0 0.3rem;
+    font-size: 0.88rem;
+  }
+
+  .about-card table th,
+  .about-card table td{
+    text-align: left;
+    padding: 0.5rem 0.6rem;
+    border-bottom: 1px solid var(--rule-soft);
+  }
+
+  .about-card table th{
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .about-card table td{ color: var(--ink-soft); }
+
+  /* ---------- footer ---------- */
+
+  .nb-notice{
+    max-width: 900px;
+    margin: 2.5rem auto 0;
+    padding: 0 1.5rem;
+  }
+
+  .nb-notice .nb-inner{
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--marigold);
+    background: var(--marigold-tint);
+    border-radius: 2px;
+    padding: 0.95rem 1.2rem;
+    font-size: 0.86rem;
+    color: var(--ink);
+  }
+
+  .nb-notice .nb-inner strong{
+    color: var(--ink);
+  }
+
+  footer{
+    text-align: center;
+    padding: 1.6rem 1.5rem 2.6rem;
+    font-size: 0.8rem;
+    color: var(--ink-soft);
   }
 </style>
 </head>
 <body>
 
-<div class="book">
-
-  <div class="cover">
-    <p class="cover-eyebrow">CALCULATION OF ELECTRICITY DUTY &nbsp;·&nbsp; ADJUSTED AS PER OED ACT, 1961 (INTEREST – ARREAR – PREVIOUS MONTH – CURRENT)</p>
-    <h1 id="titleName">Duty &amp; Interest Ledger</h1>
-    <p class="sub">Consumer <strong id="consumerNameDisplay">—</strong> · Interest <span id="rateDisplay">—</span>%/yr, simple interest · <button id="openSettingsBtn" type="button">edit ledger settings</button></p>
-
-    <div class="stat-row" id="statRow"></div>
+<header class="masthead">
+  <div class="masthead-inner">
+    <svg class="wheel" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <circle cx="50" cy="50" r="44" stroke="#F1EEE4" stroke-width="3"/>
+      <circle cx="50" cy="50" r="6" fill="#F1EEE4"/>
+      <g stroke="#F1EEE4" stroke-width="2.4">
+        <line x1="50" y1="6" x2="50" y2="94"/>
+        <line x1="6" y1="50" x2="94" y2="50"/>
+        <line x1="16" y1="16" x2="84" y2="84"/>
+        <line x1="16" y1="84" x2="84" y2="16"/>
+        <line x1="50" y1="6" x2="65" y2="24"/>
+        <line x1="50" y1="6" x2="35" y2="24"/>
+        <line x1="50" y1="94" x2="65" y2="76"/>
+        <line x1="50" y1="94" x2="35" y2="76"/>
+        <line x1="6" y1="50" x2="24" y2="35"/>
+        <line x1="6" y1="50" x2="24" y2="65"/>
+        <line x1="94" y1="50" x2="76" y2="35"/>
+        <line x1="94" y1="50" x2="76" y2="65"/>
+      </g>
+    </svg>
+    <div class="masthead-text">
+      <h1>Policy, Notification &amp; Order issued by Energy Department, Odisha on Electricity Duty</h1>
+      <p>Every policy, notification and order issued by the department on Electricity Duty, in one searchable place.</p>
+    </div>
   </div>
+</header>
 
-  <details class="settings" id="settingsDetails">
-    <summary>Ledger settings — interest rate, consumer name, and opening balances</summary>
-    <div class="settings-body">
-      <div class="field"><label for="cfg-name">Consumer name</label><input id="cfg-name" type="text" placeholder="e.g. M/s XYZ Ltd"></div>
-      <div class="field"><label for="cfg-rate">Yearly interest rate (%)</label><input id="cfg-rate" type="number" step="0.01" min="0"></div>
-      <div class="field"><label for="cfg-carry">Opening carry-forward interest (₹)</label><input id="cfg-carry" type="number" step="0.01"></div>
-      <div class="field"><label for="cfg-arrear">Opening arrear ED (₹)</label><input id="cfg-arrear" type="number" step="0.01"></div>
-      <div class="field"><label for="cfg-prevmonth">Opening previous-month due (₹)</label><input id="cfg-prevmonth" type="number" step="0.01"></div>
-      <div class="settings-actions">
-        <button class="btn ghost small" id="exportBtn" type="button">Save Ledger</button>
-        <button class="btn ghost small" id="importBtn" type="button">Import Saved Ledger</button>
-        <input type="file" id="importFile" accept="application/json">
-        <button class="btn ghost small" id="loadSampleBtn" type="button">See Example</button>
-        <button class="btn ghost small" id="clearBtn" type="button" style="color:var(--bad); border-color:var(--bad);">Clear all data</button>
-      </div>
-    </div>
-  </details>
-
-  <div class="tabbar">
-    <button class="tab-btn active" data-tab="monthly" type="button">Monthly Report</button>
-    <button class="tab-btn" data-tab="payment" type="button">Payment Report</button>
-    <button class="tab-btn" data-tab="complete" type="button">Complete Report</button>
-    <button class="tab-btn" data-tab="howto" type="button">Quick Guide</button>
-    <div class="spacer"></div>
-    <div class="count" id="tabCount"></div>
-  </div>
-
-  <div id="warnings"></div>
-
-  <!-- ============= MONTHLY REPORT (Sheet1: ED REPORT) ============= -->
-  <section class="panel" id="panel-monthly">
-    <div class="toolbar">
-      <div class="quickadd">
-        <div class="field"><label for="qa-month">Month</label><input id="qa-month" type="month"></div>
-        <div class="field"><label for="qa-dues">Current month dues (₹)</label><input id="qa-dues" type="number" step="0.01" placeholder="0.00"></div>
-        <button class="btn" id="qa-month-add" type="button" style="margin-left:8px;">Add month</button>
-        <button class="btn ghost" id="uploadExcelBtn" type="button" disabled title="Pick a starting month first">Upload Excel (Col A = Current Month ED)</button>
-        <input type="file" id="uploadExcelFile" accept=".xlsx,.xls,.csv" style="display:none">
-      </div>
-      <div class="toolbar-actions">
-        <button class="btn ghost small" id="recalcBtn1" type="button">Recalculate</button>
-      </div>
-    </div>
-    <p class="foot-note" style="margin-top:-6px; margin-bottom:16px;">To bulk-import months: pick the <strong>starting</strong> month above, then click <strong>Upload Excel</strong> and choose a spreadsheet with the monthly dues listed one below another down column A — A1 becomes the month you picked, A2 the next month, and so on.</p>
-    <div class="table-wrap">
-      <table id="monthlyTable">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Month</th>
-            <th>Current Month Dues</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody id="monthlyBody"></tbody>
-        <tfoot id="monthlyFoot"></tfoot>
-      </table>
-    </div>
-    <p class="foot-note">This tab is for entering months and their dues only. Prev Month, Arrear, Interest, Balance, Outstanding and every other calculated figure are shown together on the <strong>Complete Report</strong> tab.</p>
-  </section>
-
-  <!-- ============= PAYMENT REPORT (Sheet3: PAYMENT REPORT) ============= -->
-  <section class="panel" id="panel-payment" hidden>
-    <div class="toolbar">
-      <div class="quickadd">
-        <div class="field"><label for="qa-date">Date paid</label><input id="qa-date" type="date"></div>
-        <div class="field"><label for="qa-amount">ED paid (₹)</label><input id="qa-amount" type="number" step="0.01" placeholder="0.00"></div>
-        <button class="btn" id="qa-payment-add" type="button" style="margin-left:8px;">Add payment</button>
-        <button class="btn ghost" id="uploadPaymentsBtn" type="button">Upload Excel (Col A = Date, Col B = Payment)</button>
-        <input type="file" id="uploadPaymentsFile" accept=".xlsx,.xls,.csv" style="display:none">
-      </div>
-      <div class="toolbar-actions">
-        <button class="btn ghost small" id="recalcBtn2" type="button">Recalculate</button>
-      </div>
-    </div>
-    <p class="foot-note" style="margin-top:-6px; margin-bottom:16px;">To bulk-import payments: click <strong>Upload Excel</strong> and choose a spreadsheet with the payment date in column A and the matching amount in column B, row by row (A1 with B1, A2 with B2, and so on). Each payment is added with its own date exactly as given — no need to correct it afterward.</p>
-    <div class="table-wrap">
-      <table id="paymentTable">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Date</th>
-            <th>ED Paid</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody id="paymentBody"></tbody>
-        <tfoot id="paymentFoot"></tfoot>
-      </table>
-    </div>
-    <p class="foot-note">This tab is for entering payments only. How each payment is adjusted — Interest, Arrear, Prev Month, Current and Extra — is shown together with the monthly figures on the <strong>Complete Report</strong> tab.</p>
-  </section>
-
-  <!-- ============= COMPLETE REPORT (Monthly Report + individual payments, combined) ============= -->
-  <section class="panel" id="panel-complete" hidden>
-    <div class="toolbar">
-      <span style="font-size:11.5px; color:var(--ink-soft); font-family:'IBM Plex Mono',monospace;">🔒 This report is copy-protected — text selection, copy, and right-click are disabled here.</span>
-      <div class="toolbar-actions">
-        <button class="btn ghost small" id="savePdfBtn" type="button" title="In the print dialog, turn off &quot;Headers and footers&quot; (under More settings) so no extra title/date/page-number line prints on top of this report.">Save as PDF</button>
-        <button class="btn ghost small" id="recalcBtn3" type="button">Recalculate</button>
-      </div>
-    </div>
-    <p class="foot-note" style="margin-top:-6px; margin-bottom:16px;">When the print dialog opens, switch off <strong>"Headers and footers"</strong> (usually under "More settings") — otherwise your browser prints its own title/date/page-number line above and below the report, which can crowd or clip the ledger's own summary at the top.</p>
-    <div class="print-only-opening" id="printOpeningValues">
-      <div class="ov-title">Opening Ledger Values</div>
-      <div class="ov-items" id="printOpeningValuesItems"></div>
-    </div>
-    <div class="table-wrap">
-      <table id="completeTable">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Month</th>
-            <th>Current Month</th>
-            <th>Prev Month</th>
-            <th>Arrear</th>
-            <th>Adjusted Interest</th>
-            <th>Int. Carry</th>
-            <th>Total Interest</th>
-            <th class="payments-head">Payment</th>
-            <th>Balance</th>
-            <th>Outstanding</th>
-          </tr>
-        </thead>
-        <tbody id="completeBody"></tbody>
-        <tfoot id="completeFoot"></tfoot>
-      </table>
-    </div>
-    <p class="foot-note">The Payment column lists each individual payment received that month; the small line beneath each amount shows how that payment was adjusted — toward Interest, Arrear, Prev Month, Current, and any Extra left over. When two payments land on the same date, both show that date's combined split (the original workbook does the same).</p>
-    <p class="foot-note print-only-note">Note: the Adjusted Interest and Outstanding columns are left out of the printed/PDF version to leave more room for larger, easier-to-read text — both are still shown on screen.</p>
-
-    <div class="closing-summary" id="closingSummary"></div>
-  </section>
-
-  <!-- ============= HOW TO DO — usage guide ============= -->
-  <section class="panel" id="panel-howto" hidden>
-    <div class="howto">
-
-      <div class="howto-card">
-        <h3>1. Monthly Report — adding each month's dues</h3>
-        <p><strong>One month at a time:</strong> pick the month in the <em>Month</em> box, type the <em>Current month dues</em>, then click <strong>Add month</strong>. Do this once for every month you have — the report recalculates automatically each time.</p>
-        <p><strong>Many months at once (bulk upload):</strong> first pick the <em>earliest</em> month in the Month box — this tells the ledger which month the first figure belongs to. Then click <strong>Upload Excel (Col A = Current Month ED)</strong> and choose a spreadsheet with the dues listed one below another down column A, starting at cell A1. A1 becomes the month you picked, A2 the next month, A3 the one after, and so on — no header row, no dates in the file, just the numbers in order.</p>
-      </div>
-
-      <div class="howto-card">
-        <h3>2. Payment Report — recording what's been paid</h3>
-        <p><strong>One payment at a time:</strong> pick the <em>Date paid</em>, type the <em>ED paid</em> amount, then click <strong>Add payment</strong>.</p>
-        <p><strong>Many payments at once (bulk upload):</strong> click <strong>Upload Excel (Col A = Date, Col B = Payment)</strong> and choose a spreadsheet where column A holds the payment date and column B holds the matching amount, row by row — A1 with B1, A2 with B2, and so on. Each payment is added with its own exact date from the file, so there's nothing to correct afterward. This one doesn't need a month picked first — the dates come from the file itself.</p>
-      </div>
-
-      <div class="howto-card">
-        <h3>3. Ledger Settings — opening amounts and interest rate</h3>
-        <p>Open <strong>Ledger settings</strong> (the gold bar near the top, or the "edit ledger settings" link under the title) to set:</p>
-        <ul>
-          <li><strong>Consumer name</strong> — shown throughout the ledger and in the PDF.</li>
-          <li><strong>Yearly interest rate (%)</strong> — the simple-interest rate applied daily for the whole ledger.</li>
-          <li><strong>Opening carry-forward interest, opening arrear ED, opening previous-month due</strong> — the three starting balances that apply on the 1st day of your earliest month. Everything after that is carried forward automatically.</li>
-        </ul>
-        <p>Changing any of these recalculates the entire ledger immediately.</p>
-      </div>
-
-      <div class="howto-card">
-        <h3>4. Save Ledger and Import Saved Ledger</h3>
-        <p>This page keeps your data only in the browser tab you're using — nothing is saved automatically to a server. To keep your work:</p>
-        <ul>
-          <li><strong>Save Ledger</strong> downloads everything — settings, months, and payments — as a single <code>.json</code> file.</li>
-          <li><strong>Import Saved Ledger</strong> loads a <code>.json</code> file you saved earlier, restoring the ledger exactly as it was.</li>
-        </ul>
-        <p>Both buttons are in the Ledger settings drawer. Save regularly, especially before closing the tab.</p>
-      </div>
-
-      <div class="howto-card">
-        <h3>5. What the Complete Report shows</h3>
-        <p>The Complete Report brings the Monthly Report and Payment Report together into one month-by-month view: each row shows that month's Current Month dues, Prev Month, Arrear, Interest figures, every individual payment received that month (with how it was split between Interest, Arrear, Prev Month, Current, and Extra), and the resulting Balance. Below the table, the <strong>Outstanding Summary</strong> shows the total still owed as of the latest month, split into Interest and Arrear/Principal, plus how much of all payments made went toward interest. This is also the only tab that can be turned into a PDF, using its <strong>Save as PDF</strong> button.</p>
-      </div>
-
-    </div>
-  </section>
-
+<div class="action-bar">
+  <button type="button" class="action-btn secondary" id="homeToggleBtn" aria-expanded="true" aria-controls="homeSection">
+    Home
+  </button>
+  <button type="button" class="action-btn secondary" id="aboutToggleBtn" aria-expanded="false" aria-controls="aboutSection">
+    About Electricity Duty
+  </button>
+  <button type="button" class="action-btn secondary" id="exemptionToggleBtn" aria-expanded="false" aria-controls="exemptionSection">
+    Exemption of ED
+  </button>
+  <a class="action-btn secondary" href="oedcalculator.html">
+    Calculate your Outstanding ED Due
+  </a>
+  <button type="button" class="action-btn secondary" id="contactToggleBtn" aria-expanded="false" aria-controls="contactSection">
+    Contact Us
+  </button>
 </div>
 
+<!-- CONTACT SECTION — EDIT THE EMAIL ADDRESS BELOW -->
+<section class="about-section" id="contactSection" hidden>
+  <div class="about-card" style="text-align:center;">
+    <p style="margin:0; font-size:0.95rem;">
+      If any information found incorrect, or you have any advice or suggestion, please mail us at
+      <a href="mailto:electricitydutyodisha@gmail.com" style="color:var(--teal); font-weight:600;">electricitydutyodisha@gmail.com</a>
+    </p>
+  </div>
+</section>
+
+<!--
+  =====================================================================
+  EXEMPTION SECTION — EDIT THIS TEXT
+  List the categories/consumers currently eligible for exemption from
+  Electricity Duty, the policy each exemption is issued under, how
+  long the exemption lasts, and which office (nodal agency) handles
+  applications. Add or remove rows in the table as needed.
+  ===================================================================== -->
+<section class="about-section" id="exemptionSection" hidden>
+  <div class="about-card">
+    <h2>Exemption of Electricity Duty</h2>
+
+    <h3>Current exemption policies</h3>
+    <p>[List the policies/orders currently in force that grant ED exemption — e.g. captive power plants, renewable energy generators, specific industrial categories — with a short line on what each covers.]</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Category / Consumer</th>
+          <th>Governing policy / order</th>
+          <th>Period of exemption</th>
+          <th>Nodal agency</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>[category]</td><td>[policy/order name]</td><td>[period]</td><td>[nodal agency]</td></tr>
+        <tr><td>[category]</td><td>[policy/order name]</td><td>[period]</td><td>[nodal agency]</td></tr>
+        <tr><td>[category]</td><td>[policy/order name]</td><td>[period]</td><td>[nodal agency]</td></tr>
+      </tbody>
+    </table>
+
+    <h3>How to apply</h3>
+    <p>[Explain the application process for claiming exemption — where to apply, what documents are needed, and typical processing time.]</p>
+  </div>
+</section>
+
+<!--
+  =====================================================================
+  ABOUT SECTION — EDIT THIS TEXT
+  Everything inside #aboutSection is plain HTML you can rewrite freely:
+  history, how the duty is calculated, rates by consumer category,
+  who pays it and how it is paid. The table below is a placeholder —
+  replace the rows with the actual rate schedule.
+  ===================================================================== -->
+<section class="about-section" id="aboutSection" hidden>
+  <div class="about-card">
+    <h2>Electricity Duty in Odisha</h2>
+
+    <div class="source-links">
+      <a class="source-link-card" href="act.html">
+        <span class="source-link-tag">Part I</span>
+        <span class="source-link-title">The Odisha Electricity (Duty) Act, 1961</span>
+        <span class="source-link-desc">Section-wise summary — definitions, levy, collection, penalties, appeals</span>
+        <span class="source-link-cta">Read the Act &rarr;</span>
+      </a>
+      <a class="source-link-card" href="rules.html">
+        <span class="source-link-tag">Part II</span>
+        <span class="source-link-title">The Odisha Electricity (Duty) Rules, 1961</span>
+        <span class="source-link-desc">Rule-wise summary — calculation, records, returns, forms, recovery</span>
+        <span class="source-link-cta">Read the Rules &rarr;</span>
+      </a>
+    </div>
+
+    <h3>Chronology of Electricity Duty in Odisha</h3>
+    <p class="chrono-source">Based on: (1) the Energy Department's letter/notification on auxiliary consumption dated 6.11.1999, (2) captive ED rate amendment records, 1986–2017, (3) the Odisha Electricity (Duty) Amendment Act, 2016 (Act 11 of 2016), (4) the Odisha Electricity (Duty) Amendment Rules, 2017, and (5) Notifications No. 5728 dated 26.5.2026 and No. 7819 dated 7.7.2026 on electrical safety inspection deregulation.</p>
+
+    <ol class="chronology">
+      <li class="chrono-item">
+        <div class="chrono-date">1961 – 1986</div>
+        <div class="chrono-title">Legislative Foundation</div>
+        <div class="chrono-body">
+          <p>The Orissa Electricity (Duty) Act, 1961 (Act 14 of 1961) is the parent legislation under which duty is levied on energy consumed by consumers, payable to the State Government.</p>
+          <p>The Orissa Electricity (Duty) Amendment Act, 1986 (Act 9 of 1986) — notified 13.3.1986, effective retrospectively from 17.1.1986 — made several foundational changes:</p>
+          <ul>
+            <li>Redefined "unit" as 1 kilowatt hour of energy.</li>
+            <li>Substituted Section 3 to expand duty coverage to energy generated/supplied free of charge, energy consumed by a licensee/Board on its own premises, and energy consumed by any person generating for own use.</li>
+            <li>Added a Schedule prescribing category-wise rates (in paise/unit): Domestic, Commercial (6), Irrigation (18), Street lighting (3), General purpose (10), Large/Power Intensive/Heavy Industries (18–24), Public Institutions (25), Licensee/Board own premises (6), Self-generators (12), among others.</li>
+            <li>Exempted plants below 10 KVA capacity from duty.</li>
+          </ul>
+        </div>
+      </li>
+
+      <li class="chrono-item">
+        <div class="chrono-date">25.4.1992</div>
+        <div class="chrono-title">Rate Notification</div>
+        <div class="chrono-body">
+          <p>Notification No. 7721/E dated 25.4.1992 fixed fresh rates effective 1.4.1992, including a key entry for energy supplied to power plants/industries having captive power plants without a Board supply agreement, at 25 paise/unit, and for any person not being a licensee/Board generating for own use, at 12 paise/unit.</p>
+        </div>
+      </li>
+
+      <li class="chrono-item">
+        <div class="chrono-date">6.11.1999 &rarr; 6.3.2001</div>
+        <div class="chrono-title">Auxiliary Consumption Clarification</div>
+        <div class="chrono-body">
+          <p>Following the Supreme Court judgment in <em>State of Mysore vs. West Coast Paper Mills Ltd</em>, the Energy Department's letter dated 6.11.1999 (Letter No. 14246) clarified the duty treatment for ICCL/IMFA and other captive power plants:</p>
+          <ul>
+            <li>Auxiliary consumption was to be treated as "consumption" for duty purposes.</li>
+            <li>Transmission/transformation loss was not to be treated as consumption for duty.</li>
+            <li>Duty was to be computed retrospectively from the date of captive generation.</li>
+          </ul>
+          <p>A subsequent letter dated 6.3.2001 (Letter No. 3724) partially modified this, revising duty on auxiliary consumption to apply prospectively from 6.11.1999 rather than retrospectively, applicable to NALCO, ICCL, INDAL and other generating stations.</p>
+        </div>
+      </li>
+
+      <li class="chrono-item">
+        <div class="chrono-date">10.10.2001</div>
+        <div class="chrono-title">Rate Amendment</div>
+        <div class="chrono-body">
+          <p>Notification No. 18237 amended the 1992 notification, raising the rate for self-generators from 12 paise to 20 paise per unit.</p>
+        </div>
+      </li>
+
+      <li class="chrono-item">
+        <div class="chrono-date">1.1.2006</div>
+        <div class="chrono-title">Rate Overhaul — Percentage Model Introduced</div>
+        <div class="chrono-body">
+          <p>Notification No. 1-RE(ED)-26/2005, superseding the 1992 notification, shifted most categories from flat per-unit rates to a percentage-of-energy-charge model, with a cap of 25 paise/unit:</p>
+          <table>
+            <thead><tr><th>Category</th><th>Rate</th></tr></thead>
+            <tbody>
+              <tr><td>Irrigation / Agriculture</td><td>2% of energy charge</td></tr>
+              <tr><td>Small Scale Industry (LT)</td><td>4%</td></tr>
+              <tr><td>LT Non-Industrial</td><td>4%</td></tr>
+              <tr><td>LT Industrial (excl. SSI)</td><td>6%</td></tr>
+              <tr><td>HT Category</td><td>7%</td></tr>
+              <tr><td>EHT Category</td><td>8%</td></tr>
+              <tr><td>Self-generator (not licensee/Board)</td><td>20 paise/unit</td></tr>
+              <tr><td>Licensee/Board own premises</td><td>6 paise/unit</td></tr>
+              <tr><td>Public water works / Railway traction</td><td>Nil</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </li>
+
+      <li class="chrono-item">
+        <div class="chrono-date">2010</div>
+        <div class="chrono-title">Statutory Cap Raised</div>
+        <div class="chrono-body">
+          <p>The Orissa Electricity (Duty) Amendment Act, 2010 (Act 10 of 2010) amended Section 3(1), raising the statutory duty cap from twenty-five to forty paise per unit.</p>
+        </div>
+      </li>
+
+      <li class="chrono-item">
+        <div class="chrono-date">1.10.2015</div>
+        <div class="chrono-title">Rate Revision</div>
+        <div class="chrono-body">
+          <p>Notification No. 8309 (issued as Odisha, post-renaming) superseded the 2006 notification and applied the new 40 paise cap: Irrigation 2%, LT Non-Industrial 4%, SSI 5%, LT Industrial 8%, HT 8%, EHT 9%. Self-generators and licensee/Board own-premises consumption rose to 30 paise/unit. A new provision brought Open Access / Special Agreement consumers under duty as if supplied by the licensee.</p>
+        </div>
+      </li>
+
+      <li class="chrono-item">
+        <div class="chrono-date">3.11.2016<br><span class="chrono-eff">(assented; gazetted 5.11.2016)</span></div>
+        <div class="chrono-title">Legislative Overhaul — Amendment Act, 2016 (Act 11 of 2016)</div>
+        <div class="chrono-body">
+          <p>The Odisha Electricity (Duty) Amendment Act, 2016 substantially rewrote the parent 1961 Act. This is the single most consequential amendment in the chronology — it is the statutory basis that later permitted the captive/self-generation rate to jump to 55 paise/unit (see 12.5.2017 below).</p>
+
+          <h4>Definitional changes (Section 2)</h4>
+          <ul>
+            <li>"Auxiliary consumption" redefined as energy consumed by a generating station's auxiliary equipment (plant, machinery and switch yard) plus transformer losses within the station — excluding energy for the housing colony/other facilities and for construction work.</li>
+            <li>"Consumer" redefined to expressly include a person who generates energy for own use, "including auxiliary consumption" — writing the 1999/2001 administrative clarification directly into the statute.</li>
+            <li>New defined term "energy charges" inserted — the OERC-approved tariff charges on which percentage-based duty is calculated.</li>
+            <li>"Licensee" redefined by cross-reference to the Electricity Act, 2003; residual references to the Indian Electricity Act, 1910 replaced throughout.</li>
+          </ul>
+
+          <h4>Charging mechanism overhauled (Section 3 substituted)</h4>
+          <p>The flat category-wise paise/unit schedule structure is replaced with a two-track ceiling:</p>
+          <ul>
+            <li><strong>(a)</strong> Ordinary consumers, free-of-cost supply, and open-access/special-agreement consumers: duty at a percentage <strong>not exceeding 15%</strong> of energy charges, as notified from time to time.</li>
+            <li><strong>(b)</strong> Energy consumed by a licensee on its own premises, and by any non-licensee generating for own use (captive/self-generation): duty at a rate <strong>not exceeding ₹2 (200 paise) per unit</strong> — a five-fold jump in the statutory ceiling from the 40-paise cap fixed by the 2010 Amendment Act.</li>
+            <li>The capacity exemption threshold for small generating plants raised from 10 KVA (1986 Act) to <strong>50 KVA</strong>.</li>
+            <li>Where a meter is defective/absent or a plant fails to file returns, the Inspecting Authority may make a best-judgment assessment after a hearing.</li>
+            <li>Every rate notification must be laid before the Legislative Assembly for 14 days.</li>
+          </ul>
+
+          <h4>Other structural changes</h4>
+          <ul>
+            <li>Section 5 amended — part-payments by a consumer apportioned proportionately toward duty and interest; recovered amounts adjusted first to interest, then arrears, then current duty.</li>
+            <li>New Section 5-A inserted — joint and several liability on transfer of business/property; reconnection barred until arrears are cleared; liquidators, receivers and directors made personally liable in specified circumstances.</li>
+            <li>Section 6 amended — books of account must separately record energy charges billed, category-wise.</li>
+            <li>Section 7 amended — Inspecting Officers are now Chief Electrical Inspector/Electrical Inspector appointed under Section 162 of the Electricity Act, 2003, of at least Chief Engineer/Executive Engineer rank respectively.</li>
+            <li>Section 8 re-headed "Dispute resolution" — new appellate hierarchy (Deputy → Electrical Inspector → Chief Electrical Inspector → Principal Chief Electrical Inspector); appeals require a 50% pre-deposit; exemption disputes go to the Secretary, Energy Department, whose decision is final.</li>
+            <li>New Section 10-A inserted — garnishee-style "special mode of recovery" against third parties holding money due to a defaulter.</li>
+            <li>Section 11 amended — evasion now attracts a fine of up to ₹1,000/day of delay from detection, capped at ₹1,00,000, after a hearing.</li>
+          </ul>
+        </div>
+      </li>
+
+      <li class="chrono-item">
+        <div class="chrono-date">24.1.2017<br><span class="chrono-eff">(deemed effective 5.11.2016)</span></div>
+        <div class="chrono-title">Procedural Rules Amendment — Odisha Electricity (Duty) Amendment Rules, 2017</div>
+        <div class="chrono-body">
+          <p>Notification No. 617–BT(ED)-01/2016/En., dated 24.1.2017, amended the Odisha Electricity (Duty) Rules, 1961 — deemed to have come into force from 5.11.2016, the same commencement date as the 2016 Amendment Act, so that rules and parent Act took effect together:</p>
+          <ul>
+            <li><strong>Rule 2(c)</strong> substituted — "Electrical Inspector" now means the Inspector appointed under Section 162 of the Electricity Act, 2003.</li>
+            <li><strong>Rule 2A</strong> substituted — minimum qualifications for an Inspecting Officer: a degree in Electrical Engineering (or equivalent) plus at least three years' practice.</li>
+            <li><strong>Rule 3</strong> substituted — licensees must show duty as a separate bill line item and remit within 30 days to a distinct Treasury head; self-generators self-assess duty on units used, including auxiliary consumption, and remit within 30 days of the month of generation; refunds run through Forms A, B and C.</li>
+            <li><strong>Rule 3-A</strong> substituted — unpaid duty/interest after 30 days of a demand notice triggers a Form D notice under the new Section 10-A recovery mechanism.</li>
+            <li><strong>Rule 4</strong> substituted — a transitional, proportionate method for calculating duty where a meter-reading period straddles the 2016 Amendment Act's commencement date.</li>
+            <li><strong>Rules 6–11</strong> substituted — expanded record-keeping, monthly/annual return formats (Forms E–J), inspection and power-of-entry provisions extended to self-generators and open-access consumers, best-judgment assessment on Form K, appeal on Form L, and separate metering for combined installations.</li>
+            <li><strong>Rules 12 &amp; 13</strong> merged into a single new Rule 12 ("Removal of difficulties") — interpretive doubts go to the Energy Department, whose decision is final.</li>
+            <li><strong>Forms A–L</strong> substituted wholesale to align with the above.</li>
+          </ul>
+        </div>
+      </li>
+
+      <li class="chrono-item">
+        <div class="chrono-date">27.12.2016<br><span class="chrono-eff">(effective 5.11.2016)</span></div>
+        <div class="chrono-title">Rate Revision — New Schedule Under the 2016 Act</div>
+        <div class="chrono-body">
+          <p>Notification No. 9539–BT(ED)-01-2016/En, dated 27.12.2016, superseding Notification No. 8309 dated 1.10.2015, fixed the following Schedule of rates, effective 5.11.2016 (the commencement date of the 2016 Amendment Act) — issued under the newly substituted Section 3, still well within both the old 40-paise and new ₹2/unit ceilings:</p>
+          <table>
+            <thead><tr><th>Sl. No.</th><th>Category of consumer or consumption</th><th>Rate of Electricity Duty</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>Irrigation Pumping and Agriculture (all supply voltages)</td><td>2% of energy charge</td></tr>
+              <tr><td>2</td><td>L.T. Non-Industrial category</td><td>4% of energy charge</td></tr>
+              <tr><td>3</td><td>Small Scale Industry [L.T. Industrial Supply]</td><td>5% of energy charge</td></tr>
+              <tr><td>4</td><td>L.T. Industrial Category (excluding Small Scale Industry)</td><td>8% of energy charge</td></tr>
+              <tr><td>5</td><td>H.T. Category</td><td>8% of energy charge</td></tr>
+              <tr><td>6</td><td>E.H.T. Category</td><td>9% of energy charge</td></tr>
+              <tr><td>7</td><td>Any person not being a licensee who generates energy for own use or consumption</td><td>30 paise/unit</td></tr>
+              <tr><td>8</td><td>A licensee in its own premises</td><td>30 paise/unit</td></tr>
+              <tr><td>9</td><td>Public water works and sewerage pumping, and Railway traction</td><td>Nil</td></tr>
+              <tr><td>10</td><td>Open Access Power (other than captive power), or power supplied by special agreement, or free of cost by the licensee</td><td>Same as it would have availed power from licensee</td></tr>
+            </tbody>
+          </table>
+          <p>This largely retained the 2015 structure (2%–9% slabs; captive/licensee at 30 paise/unit) but formalized Open Access Power (other than captive) as a distinct category (Sl. No. 10), taxed the same as licensee-supplied power. The notification also attached explanatory clarifications defining each category by supply voltage/contract demand — for instance, Small Scale Industry/LT Industrial Supply (Sl. 3) covers industrial consumers at voltage ≤ 650 V with contract demand below 22 KVA, HT (Sl. 5) covers voltage above 650 V up to and including 33,000 V, and EHT (Sl. 6) covers voltage above 33,000 V.</p>
+        </div>
+      </li>
+
+      <li class="chrono-item">
+        <div class="chrono-date">12.5.2017</div>
+        <div class="chrono-title">Captive Rate Sharply Increased</div>
+        <div class="chrono-body">
+          <p>Notification No. 3442 amended the 2016 notification, raising the rate for self-generators (Sl. 7) and licensee-own-premises (Sl. 8) from 30 paise to 55 paise per unit. This increase — beyond the old 40-paise cap — was made possible only by the ₹2/unit statutory ceiling introduced by the 2016 Amendment Act.</p>
+        </div>
+      </li>
+
+      <li class="chrono-item">
+        <div class="chrono-date">26.5.2026</div>
+        <div class="chrono-title">Electrical Safety Inspection Deregulated — Notification No. 5728 ("Deregulation Phase II for 33kV")</div>
+        <div class="chrono-body">
+          <p>Notification No. 5728/En, dated 26.5.2026, marks a shift in a related but <strong>distinct</strong> regulatory track from electricity duty: the safety inspection and certification of electrical installations under the Central Electricity Authority (Measures relating to Safety and Electric Supply) Regulations, 2023:</p>
+          <ul>
+            <li><strong>Self-certification up to 33 kV:</strong> installations connected at voltage up to 33 kV are now to be self-certified by the owner/supplier/consumer through a Chartered Electrical Safety Engineer (CESE) of their choosing, instead of mandatory government Electrical Inspectorate inspection.</li>
+            <li><strong>Carve-outs retained under Electrical Inspector jurisdiction regardless of voltage:</strong> installations under Section 54 of the Electricity Act, 2003, and installations at mines, oil fields and railways.</li>
+            <li><strong>Inspection periodicity unchanged</strong> from Notification No. 10317 dated 27.10.2022, whether inspected by the Electrical Inspectorate or a CESE.</li>
+            <li><strong>OPTCL self-certification up to 765 kV:</strong> OPTCL installations may be inspected, tested and self-certified by OPTCL itself before commencement of supply.</li>
+            <li><strong>Generating-plant commissioning-approval threshold raised to 500 KVA:</strong> no consumer may commission a self-generation plant above 500 KVA without the Electrical Inspector's written approval.</li>
+          </ul>
+          <div class="chrono-note">
+            <strong>Note on the 10 KVA → 50 KVA → 500 KVA progression:</strong> the 500 KVA figure governs a <em>different</em> mechanism than the duty-exemption thresholds tracked earlier in this chronology. The 10 KVA (1986 Act) and 50 KVA (2016 Act) thresholds concern exemption from electricity duty itself. The 500 KVA threshold here concerns Electrical Inspector approval to commission a plant — a safety/commissioning control, not a duty exemption; duty remains payable regardless. Read together, both moves reflect the same broader deregulatory direction over time.
+          </div>
+        </div>
+      </li>
+
+      <li class="chrono-item">
+        <div class="chrono-date">7.7.2026</div>
+        <div class="chrono-title">Utility Self-Certification Clarified — Notification No. 7819</div>
+        <div class="chrono-body">
+          <p>Notification No. 7819/En, dated 7.7.2026, issued in partial modification of Notification No. 5728, narrows who may self-certify installations belonging to power utilities: electrical installations belonging to <strong>OHPC, OPGC and the DISCOMs</strong> up to 33 kV shall be inspected, tested and self-certified by the utility's own qualified and authorised electrical engineers — rather than through an independently-engaged CESE as under the original May notification. Issued under the same 2023 Safety Regulations.</p>
+        </div>
+      </li>
+    </ol>
+
+    <h3>Captive / Self-Generation ED Rate Trajectory</h3>
+    <table>
+      <thead>
+        <tr><th>Effective date</th><th>Rate (paise/unit)</th><th>Statutory ceiling in force</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1.4.1992</td><td>12</td><td>No statutory cap yet (Schedule rates under 1986 Act)</td></tr>
+        <tr><td>10.10.2001</td><td>20</td><td>No statutory cap yet</td></tr>
+        <tr><td>1.1.2006</td><td>20 (unchanged)</td><td>25 paise/unit cap (Explanation-1)</td></tr>
+        <tr><td>1.10.2015</td><td>30</td><td>40 paise/unit cap (2010 Amendment Act)</td></tr>
+        <tr><td>5.11.2016</td><td>30 (unchanged)</td><td>₹2/unit (200 paise) cap (2016 Amendment Act)</td></tr>
+        <tr><td>12.5.2017</td><td>55</td><td>₹2/unit (200 paise) cap</td></tr>
+      </tbody>
+    </table>
+
+    <div class="chrono-summary">
+      The overall trend shows the state progressively (a) clarifying what counts as "consumption" for duty — first administratively (1999/2001) and then by writing it into the statutory definition of "consumer" itself (2016 Amendment Act), (b) moving from flat per-unit rates to percentage-of-energy-charge for regular consumers, (c) rebuilding the enforcement machinery in 2016–17 (dispute resolution, garnishee recovery, transfer liability, evasion penalties, prescribed forms), (d) steadily increasing the duty burden on captive/self-generated power — nearly 4.5x between 1992 and 2017 — enabled at the legal level by a five-fold statutory ceiling increase (40 paise → ₹2/unit) in the 2016 Amendment Act, and (e) by 2026, deregulating the safety-inspection side in parallel — shifting routine certification of sub-33kV and (for OPTCL) even up to 765kV installations toward self-certification, while still requiring Electrical Inspector sign-off for larger self-generation plants (above 500 KVA) and the highest-risk categories (Section 54 installations, mines, oil fields, railways).
+    </div>
+  </div>
+</section>
+
 <script>
-(function(){
-"use strict";
+  // All toggle buttons behave as an accordion: opening one closes the others.
+  const toggles = [
+    { btn: "homeToggleBtn",      section: "homeSection" },
+    { btn: "aboutToggleBtn",     section: "aboutSection" },
+    { btn: "exemptionToggleBtn", section: "exemptionSection" },
+    { btn: "contactToggleBtn",   section: "contactSection" }
+  ];
 
-/* =========================================================================
-   ENGINE — faithful port of the workbook's "Calculation" sheet.
-   ========================================================================= */
-
-function pad2(n){ return n < 10 ? '0' + n : '' + n; }
-function toDateOnly(d){ return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
-function addDays(d, n){ const r = new Date(d); r.setDate(r.getDate() + n); return r; }
-function eomonth(d){ return new Date(d.getFullYear(), d.getMonth() + 1, 0); }
-const MONTH_ABBR = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-function monthKey(d){ return MONTH_ABBR[d.getMonth()] + '-' + pad2(d.getFullYear() % 100); }
-function dateKey(d){ return d.getFullYear() + '-' + pad2(d.getMonth()+1) + '-' + pad2(d.getDate()); }
-
-function runCalculation(config, months, payments){
-  const warnings = [];
-  if (!months.length){
-    return { monthly: new Map(), dailyByPaymentDate: new Map(), warnings };
+  function closeAllToggles(){
+    toggles.forEach(t => {
+      document.getElementById(t.btn).setAttribute("aria-expanded", "false");
+      document.getElementById(t.section).hidden = true;
+    });
   }
 
-  const dailyRate = config.yearlyRatePct / 100 / 365;
-
-  const monthsSorted = months
-    .map(m => ({ date: new Date(m.date.getFullYear(), m.date.getMonth(), 1), dues: Number(m.dues) || 0 }))
-    .sort((a,b) => a.date - b.date);
-
-  const duesByMonth = new Map();
-  for (const m of monthsSorted) duesByMonth.set(monthKey(m.date), m.dues);
-
-  for (let i = 1; i < monthsSorted.length; i++){
-    const prevEnd = eomonth(monthsSorted[i-1].date);
-    const expectedNext = new Date(prevEnd.getFullYear(), prevEnd.getMonth()+1, 1);
-    if (expectedNext.getTime() !== monthsSorted[i].date.getTime()){
-      warnings.push(
-        'Gap detected: no dues entered between ' + monthKey(monthsSorted[i-1].date) + ' and ' + monthKey(monthsSorted[i].date) +
-        '. Balances reset to zero during the gap, exactly as the original spreadsheet does when a month is skipped.'
-      );
-    }
-  }
-
-  const paidByDate = new Map();
-  for (const p of payments){
-    const key = dateKey(toDateOnly(p.date));
-    paidByDate.set(key, (paidByDate.get(key) || 0) + (Number(p.amount) || 0));
-  }
-
-  const firstDate = monthsSorted[0].date;
-  const lastDate = eomonth(monthsSorted[monthsSorted.length - 1].date);
-
-  let prevAF = 0;
-  let prevAK = config.initArrear || 0;
-  let prevAL = 0;
-  let prevAM = config.initPrevMonth || 0;
-  let prevAO = config.initCarryInterest || 0;
-
-  const monthly = new Map();
-  const dailyByPaymentDate = new Map();
-
-  let d = new Date(firstDate);
-  while (d.getTime() <= lastDate.getTime()){
-    const mKey = monthKey(d);
-    const isActive = duesByMonth.has(mKey);
-    const dayOfMonth = d.getDate();
-    const isDay1 = dayOfMonth === 1;
-    const is31 = dayOfMonth === 31;
-
-    let M, N, O, L;
-    if (!isActive){
-      M = N = O = 0; L = 0;
-    } else {
-      if (isDay1){
-        M = prevAL + prevAK;
-        N = prevAM;
-        O = duesByMonth.get(mKey) || 0;
-      } else {
-        M = prevAK; N = prevAL; O = prevAM;
+  toggles.forEach(t => {
+    document.getElementById(t.btn).addEventListener("click", function(){
+      const section = document.getElementById(t.section);
+      const wasOpen = this.getAttribute("aria-expanded") === "true";
+      closeAllToggles();
+      if (!wasOpen){
+        this.setAttribute("aria-expanded", "true");
+        section.hidden = false;
+        section.scrollIntoView({ behavior: "smooth", block: "nearest" });
       }
-      L = prevAO;
-    }
+    });
+  });
+</script>
 
-    const P = L;
-    const Q = is31 ? N * dailyRate : 0;
-    const R = P + Q;
 
-    const paidToday = paidByDate.get(dateKey(d)) || 0;
-    const T = isActive ? (prevAF + paidToday) : 0;
+<section class="about-section" id="homeSection">
+  <div class="toolbar" style="max-width:none; margin:0; padding:0;">
+    <div class="toolbar-card">
+      <div class="search-row">
+        <input type="search" id="searchInput" placeholder="Search by title or keyword…" aria-label="Search documents">
+        <select id="yearFilter" aria-label="Filter by year">
+          <option value="all">All years</option>
+        </select>
+      </div>
+      <div class="chip-row" id="categoryChips" role="group" aria-label="Filter by category"></div>
+    </div>
+  </div>
 
-    const U = Math.min(T, R);
-    const V = R - U;
-    const W = T - U;
-    const X = Math.min(W, M);
-    const Y = M - X;
-    const Z = W - X;
-    const AA = Math.min(Z, N);
-    const AB = N - AA;
-    const AC = Z - AA;
-    const AD = Math.min(AC, O);
-    const AE = O - AD;
-    const AF = AC - AD;
+  <p class="result-count" id="resultCount" style="max-width:none; margin:1.4rem 0 0; padding:0;"></p>
 
-    const AJ = V, AK = Y, AL = AB, AM = AE;
-    const AN = AK * dailyRate;
-    const AO = AJ + AN;
+  <main id="registerRoot" style="max-width:none; margin:0; padding:0.6rem 0 1rem;"></main>
+</section>
 
-    if (isActive){
-      if (!monthly.has(mKey)){
-        monthly.set(mKey, {
-          monthKey: mKey, dateObj: new Date(d.getFullYear(), d.getMonth(), 1),
-          firstDate: null, lastDate: null,
-          prevMonth: 0, arrear: 0,
-          adjInterest: 0, intCarry: 0, interest: 0,
-          paymentTotal: 0, balance: 0, outstanding: 0,
-          active: true
-        });
-      }
-      const acc = monthly.get(mKey);
-      if (isDay1){ acc.firstDate = new Date(d); acc.prevMonth = N; acc.arrear = M; }
-      acc.adjInterest += U;
-      acc.paymentTotal += paidToday;
+<details class="guide" style="display:none;">
+  <summary>How to add a new document to this page</summary>
+  <div class="guide-body">
+    <p>No coding tools are needed for day-to-day updates — just a text editor.</p>
+    <ol>
+      <li>Upload the PDF to a Google Drive folder.</li>
+      <li>Right-click the file → <strong>Share</strong> → set access to "Anyone with the link" → <strong>Viewer</strong>, then copy the link.</li>
+      <li>Open this file (<code>index.html</code>) in any text editor and find the comment <code>EDIT YOUR DOCUMENTS BELOW</code>.</li>
+      <li>Copy one existing entry, paste it as a new one, and change <code>title</code>, <code>category</code>, <code>year</code>, <code>date</code>, <code>brief</code> and <code>drive</code> to match the new document.</li>
+      <li>Save the file and re-upload it to wherever the page is hosted. The search box, filters and year grouping update automatically — nothing else needs to change.</li>
+    </ol>
+  </div>
+</details>
 
-      if (d.getTime() === eomonth(d).getTime()){
-        acc.lastDate = new Date(d);
-        acc.intCarry = AO;
-        const AQ = AK + AL, AR = AO;
-        acc.balance = AQ + AR - AF + AM;
-        acc.outstanding = AQ + AR;
-        acc.interest = acc.adjInterest + acc.intCarry;
-      }
-    }
+<div class="nb-notice">
+  <div class="nb-inner">
+    <strong>N.B.:</strong> This is not the official website of the Energy Department, Government of Odisha. For accurate and up-to-date information, please visit the official websites of the Energy Department, Odisha; EIC (Electricity)-cum-PCEI, Odisha; GRIDCO; and the DISCOMs.
+  </div>
+</div>
 
-    if (paidToday !== 0){
-      const key = dateKey(d);
-      dailyByPaymentDate.set(key, {
-        interest: U, arrear: X, prevMonth: AA, current: AD, extra: AF,
-        total: U + X + AA + AD + AF
-      });
-    }
+<footer>
+  Energy Department, Government of Odisha · Electricity Duty document register · This is a static reference page — always verify against the department's official notifications for legal purposes.
+</footer>
 
-    prevAF = AF; prevAK = AK; prevAL = AL; prevAM = AM; prevAO = AO;
-    d = addDays(d, 1);
-  }
+<script>
+/* =====================================================================
+   EDIT YOUR DOCUMENTS BELOW
+   Each object is one document. Fields:
+     title    – full title as it appears on the document
+     category – one of: "Policy", "Notification", "Order", "Act", "Rule"
+     year     – used for grouping and the year filter
+     date     – shown next to the title, any readable format (e.g. "12 Mar 2023")
+     brief    – 1–3 sentence plain-language summary of what it covers
+     drive    – the Google Drive share link for the PDF
+   The sample entries below are placeholders — replace them with the
+   department's actual releases, dates and Drive links.
+   ===================================================================== */
 
-  return { monthly, dailyByPaymentDate, warnings };
-}
-
-/* =========================================================================
-   APP STATE
-   ========================================================================= */
-
-const SAMPLE_DATA = {"config": {"consumerName": "M/s XYZ Ltd","yearlyRatePct": 18,"initCarryInterest": 887,"initArrear": 5874,"initPrevMonth": 280},"months": [{"date": "2006-04-01","dues": 112},{"date": "2006-05-01","dues": 601},{"date": "2006-06-01","dues": 126},{"date": "2006-07-01","dues": 44},{"date": "2006-08-01","dues": 598},{"date": "2006-09-01","dues": 342},{"date": "2006-10-01","dues": 70},{"date": "2006-11-01","dues": 311},{"date": "2006-12-01","dues": 0},{"date": "2007-01-01","dues": 231},{"date": "2007-02-01","dues": 144},{"date": "2007-03-01","dues": 263},{"date": "2007-04-01","dues": 8285},{"date": "2007-05-01","dues": 1644},{"date": "2007-06-01","dues": 742},{"date": "2007-07-01","dues": 582},{"date": "2007-08-01","dues": 1733},{"date": "2007-09-01","dues": 910},{"date": "2007-10-01","dues": 142},{"date": "2007-11-01","dues": 787},{"date": "2007-12-01","dues": 1816},{"date": "2008-01-01","dues": 170},{"date": "2008-02-01","dues": 200},{"date": "2008-03-01","dues": 1084},{"date": "2008-04-01","dues": 594},{"date": "2008-05-01","dues": 1178},{"date": "2008-06-01","dues": 468},{"date": "2008-07-01","dues": 870},{"date": "2008-08-01","dues": 2988},{"date": "2008-09-01","dues": 720},{"date": "2008-10-01","dues": 726},{"date": "2008-11-01","dues": 728},{"date": "2008-12-01","dues": 722},{"date": "2009-01-01","dues": 728},{"date": "2009-02-01","dues": 726},{"date": "2009-03-01","dues": 728},{"date": "2009-04-01","dues": 722},{"date": "2009-05-01","dues": 756},{"date": "2009-06-01","dues": 697},{"date": "2009-07-01","dues": 722},{"date": "2009-08-01","dues": 728},{"date": "2009-09-01","dues": 716},{"date": "2009-10-01","dues": 738},{"date": "2009-11-01","dues": 722},{"date": "2009-12-01","dues": 638},{"date": "2010-01-01","dues": 726},{"date": "2010-02-01","dues": 13526},{"date": "2010-03-01","dues": 191210},{"date": "2010-04-01","dues": 585590},{"date": "2010-05-01","dues": 480400},{"date": "2010-06-01","dues": 774000},{"date": "2010-07-01","dues": 239400},{"date": "2010-08-01","dues": 460800},{"date": "2010-09-01","dues": 1875800},{"date": "2010-10-01","dues": 2447302},{"date": "2010-11-01","dues": 3559844},{"date": "2010-12-01","dues": 3818148},{"date": "2011-01-01","dues": 2054838},{"date": "2011-02-01","dues": 3544192},{"date": "2011-03-01","dues": 3505718},{"date": "2011-04-01","dues": 2861098},{"date": "2011-05-01","dues": 1266274},{"date": "2011-06-01","dues": 2759852},{"date": "2011-07-01","dues": 2013406},{"date": "2011-08-01","dues": 2530636},{"date": "2011-09-01","dues": 1121630},{"date": "2011-10-01","dues": 3075008},{"date": "2011-11-01","dues": 2316116},{"date": "2011-12-01","dues": 2539306},{"date": "2012-01-01","dues": 2900072},{"date": "2012-02-01","dues": 3583878},{"date": "2012-03-01","dues": 4986894},{"date": "2012-04-01","dues": 4076526},{"date": "2012-05-01","dues": 3946384},{"date": "2012-06-01","dues": 2055702},{"date": "2012-07-01","dues": 3324584},{"date": "2012-08-01","dues": 1917079},{"date": "2012-09-01","dues": 3567903},{"date": "2012-10-01","dues": 3561972},{"date": "2012-11-01","dues": 3797898},{"date": "2012-12-01","dues": 3234373},{"date": "2013-01-01","dues": 3745184},{"date": "2013-02-01","dues": 1390365},{"date": "2013-03-01","dues": 2925082},{"date": "2013-04-01","dues": 2605716},{"date": "2013-05-01","dues": 1641747},{"date": "2013-06-01","dues": 3854285},{"date": "2013-07-01","dues": 999597},{"date": "2013-08-01","dues": 4114687},{"date": "2013-09-01","dues": 2286673},{"date": "2013-10-01","dues": 3427877},{"date": "2013-11-01","dues": 3148007},{"date": "2013-12-01","dues": 3759093},{"date": "2014-01-01","dues": 3797531},{"date": "2014-02-01","dues": 3063057},{"date": "2014-03-01","dues": 3278413},{"date": "2014-04-01","dues": 3126899},{"date": "2014-05-01","dues": 3569906},{"date": "2014-06-01","dues": 2394748},{"date": "2014-07-01","dues": 2595636},{"date": "2014-08-01","dues": 4169160},{"date": "2014-09-01","dues": 2576728},{"date": "2014-10-01","dues": 2941194},{"date": "2014-11-01","dues": 1974705},{"date": "2014-12-01","dues": 2773221},{"date": "2015-01-01","dues": 2736064},{"date": "2015-02-01","dues": 2089590},{"date": "2015-03-01","dues": 2210817},{"date": "2015-04-01","dues": 2290689},{"date": "2015-05-01","dues": 3088943},{"date": "2015-06-01","dues": 2525484},{"date": "2015-07-01","dues": 2737027},{"date": "2015-08-01","dues": 2832303},{"date": "2015-09-01","dues": 3475968},{"date": "2015-10-01","dues": 3855812},{"date": "2015-11-01","dues": 4555693},{"date": "2015-12-01","dues": 4864360},{"date": "2016-01-01","dues": 4825323},{"date": "2016-02-01","dues": 5358671},{"date": "2016-03-01","dues": 6911812},{"date": "2016-04-01","dues": 3930700},{"date": "2016-05-01","dues": 6454484},{"date": "2016-06-01","dues": 6154985},{"date": "2016-07-01","dues": 6195806},{"date": "2016-08-01","dues": 6013667},{"date": "2016-09-01","dues": 3668396},{"date": "2016-10-01","dues": 5969497},{"date": "2016-11-01","dues": 6033233},{"date": "2016-12-01","dues": 5941798},{"date": "2017-01-01","dues": 8152444},{"date": "2017-02-01","dues": 7240504},{"date": "2017-03-01","dues": 8715580},{"date": "2017-04-01","dues": 9565209},{"date": "2017-05-01","dues": 15196308},{"date": "2017-06-01","dues": 19238626},{"date": "2017-07-01","dues": 19702029},{"date": "2017-08-01","dues": 18108739},{"date": "2017-09-01","dues": 14010169},{"date": "2017-10-01","dues": 13998179},{"date": "2017-11-01","dues": 14660591},{"date": "2017-12-01","dues": 19134335},{"date": "2018-01-01","dues": 19116867},{"date": "2018-02-01","dues": 17220546},{"date": "2018-03-01","dues": 19641389},{"date": "2018-04-01","dues": 20627787},{"date": "2018-05-01","dues": 19887126},{"date": "2018-06-01","dues": 17549004},{"date": "2018-07-01","dues": 18649586},{"date": "2018-08-01","dues": 19476422},{"date": "2018-09-01","dues": 13811699},{"date": "2018-10-01","dues": 12753345},{"date": "2018-11-01","dues": 13729455},{"date": "2018-12-01","dues": 13650843},{"date": "2019-01-01","dues": 15318974},{"date": "2019-02-01","dues": 14397746},{"date": "2019-03-01","dues": 16523574},{"date": "2019-04-01","dues": 13069639},{"date": "2019-05-01","dues": 10556988},{"date": "2019-06-01","dues": 12469851},{"date": "2019-07-01","dues": 12436518},{"date": "2019-08-01","dues": 11362170},{"date": "2019-09-01","dues": 13042938},{"date": "2019-10-01","dues": 14660542},{"date": "2019-11-01","dues": 15049608},{"date": "2019-12-01","dues": 16833112},{"date": "2020-01-01","dues": 13507098},{"date": "2020-02-01","dues": 15851695},{"date": "2020-03-01","dues": 13906641},{"date": "2020-04-01","dues": 54995},{"date": "2020-05-01","dues": 15481912},{"date": "2020-06-01","dues": 15629339},{"date": "2020-07-01","dues": 14138217},{"date": "2020-08-01","dues": 16814942},{"date": "2020-09-01","dues": 18603105},{"date": "2020-10-01","dues": 17017465},{"date": "2020-11-01","dues": 14207280},{"date": "2020-12-01","dues": 22020962},{"date": "2021-01-01","dues": 21489571},{"date": "2021-02-01","dues": 19645239},{"date": "2021-03-01","dues": 20235997},{"date": "2021-04-01","dues": 20720093},{"date": "2021-05-01","dues": 15157274},{"date": "2021-06-01","dues": 20499301},{"date": "2021-07-01","dues": 19806921},{"date": "2021-08-01","dues": 20583657},{"date": "2021-09-01","dues": 18450610},{"date": "2021-10-01","dues": 22019470},{"date": "2021-11-01","dues": 19499579},{"date": "2021-12-01","dues": 20506074},{"date": "2022-01-01","dues": 19267204},{"date": "2022-02-01","dues": 14688136},{"date": "2022-03-01","dues": 20515549},{"date": "2022-04-01","dues": 19923536},{"date": "2022-05-01","dues": 18626014},{"date": "2022-06-01","dues": 18670566},{"date": "2022-07-01","dues": 19829235},{"date": "2022-08-01","dues": 19214866},{"date": "2022-09-01","dues": 15005158},{"date": "2022-10-01","dues": 18904633},{"date": "2022-11-01","dues": 20178609},{"date": "2022-12-01","dues": 22345946},{"date": "2023-01-01","dues": 22923478},{"date": "2023-02-01","dues": 20247435},{"date": "2023-03-01","dues": 21334855},{"date": "2023-04-01","dues": 22927982},{"date": "2023-05-01","dues": 16777447},{"date": "2023-06-01","dues": 16257560},{"date": "2023-07-01","dues": 19652597},{"date": "2023-08-01","dues": 17920843},{"date": "2023-09-01","dues": 20783626},{"date": "2023-10-01","dues": 19188312},{"date": "2023-11-01","dues": 7731955},{"date": "2023-12-01","dues": 11803240},{"date": "2024-01-01","dues": 15496886},{"date": "2024-02-01","dues": 14848439},{"date": "2024-03-01","dues": 15585165},{"date": "2024-04-01","dues": 13059354},{"date": "2024-05-01","dues": 16962361},{"date": "2024-06-01","dues": 17711243},{"date": "2024-07-01","dues": 21784884},{"date": "2024-08-01","dues": 14330624},{"date": "2024-09-01","dues": 7607265},{"date": "2024-10-01","dues": 15024587},{"date": "2024-11-01","dues": 18967669},{"date": "2024-12-01","dues": 20258031},{"date": "2025-01-01","dues": 13217672},{"date": "2025-02-01","dues": 11267806},{"date": "2025-03-01","dues": 14182432},{"date": "2025-04-01","dues": 9460075},{"date": "2025-05-01","dues": 13831386},{"date": "2025-06-01","dues": 20993753},{"date": "2025-07-01","dues": 18252198},{"date": "2025-08-01","dues": 16950892},{"date": "2025-09-01","dues": 23299430},{"date": "2025-10-01","dues": 20680224},{"date": "2025-11-01","dues": 14538040},{"date": "2025-12-01","dues": 12442695}],"payments": [{"date": "2006-04-12","amount": 5504,"dateIsDefault": false},{"date": "2006-04-12","amount": 650,"dateIsDefault": false},{"date": "2006-05-05","amount": 112,"dateIsDefault": false},{"date": "2006-06-12","amount": 601,"dateIsDefault": false},{"date": "2006-07-14","amount": 127,"dateIsDefault": false},{"date": "2006-08-16","amount": 44,"dateIsDefault": false},{"date": "2006-09-05","amount": 598,"dateIsDefault": false},{"date": "2006-10-10","amount": 342,"dateIsDefault": false},{"date": "2006-11-08","amount": 71,"dateIsDefault": false},{"date": "2006-12-11","amount": 311,"dateIsDefault": false},{"date": "2007-02-13","amount": 232,"dateIsDefault": false},{"date": "2007-03-13","amount": 144,"dateIsDefault": false},{"date": "2007-04-16","amount": 263,"dateIsDefault": false},{"date": "2007-05-09","amount": 8286,"dateIsDefault": false},{"date": "2007-06-13","amount": 1644,"dateIsDefault": false},{"date": "2007-07-20","amount": 743,"dateIsDefault": false},{"date": "2007-08-13","amount": 583,"dateIsDefault": false},{"date": "2007-09-19","amount": 1733,"dateIsDefault": false},{"date": "2007-10-17","amount": 911,"dateIsDefault": false},{"date": "2007-11-12","amount": 142,"dateIsDefault": false},{"date": "2007-12-14","amount": 787,"dateIsDefault": false},{"date": "2008-01-10","amount": 1817,"dateIsDefault": false},{"date": "2008-02-21","amount": 171,"dateIsDefault": false},{"date": "2008-03-12","amount": 200,"dateIsDefault": false},{"date": "2008-04-16","amount": 1084,"dateIsDefault": false},{"date": "2008-05-15","amount": 594,"dateIsDefault": false},{"date": "2008-06-17","amount": 1178,"dateIsDefault": false},{"date": "2008-07-15","amount": 468,"dateIsDefault": false},{"date": "2008-08-22","amount": 870,"dateIsDefault": false},{"date": "2008-09-12","amount": 2988,"dateIsDefault": false},{"date": "2008-10-18","amount": 1000,"dateIsDefault": false},{"date": "2008-11-18","amount": 88,"dateIsDefault": false},{"date": "2009-01-03","amount": 2130,"dateIsDefault": false},{"date": "2009-01-03","amount": 170,"dateIsDefault": false},{"date": "2009-02-13","amount": 398,"dateIsDefault": false},{"date": "2009-03-18","amount": 1192,"dateIsDefault": false},{"date": "2009-04-20","amount": 378,"dateIsDefault": false},{"date": "2009-05-22","amount": 926,"dateIsDefault": false},{"date": "2009-06-12","amount": 1342,"dateIsDefault": false},{"date": "2009-07-21","amount": 1604,"dateIsDefault": false},{"date": "2009-08-22","amount": 732,"dateIsDefault": false},{"date": "2009-09-30","amount": 148,"dateIsDefault": false},{"date": "2009-10-24","amount": 62,"dateIsDefault": false},{"date": "2009-11-19","amount": 1012,"dateIsDefault": false},{"date": "2009-12-21","amount": 96,"dateIsDefault": false},{"date": "2010-01-22","amount": 450,"dateIsDefault": false},{"date": "2010-02-24","amount": 1110,"dateIsDefault": false},{"date": "2010-03-20","amount": 140,"dateIsDefault": false},{"date": "2010-04-23","amount": 191672,"dateIsDefault": false},{"date": "2010-05-26","amount": 830,"dateIsDefault": false},{"date": "2010-06-11","amount": 585590,"dateIsDefault": false},{"date": "2010-06-24","amount": 1692,"dateIsDefault": false},{"date": "2010-07-17","amount": 774000,"dateIsDefault": false},{"date": "2010-07-01","amount": 480400,"dateIsDefault": false},{"date": "2010-07-17","amount": 540,"dateIsDefault": false},{"date": "2010-08-20","amount": 239400,"dateIsDefault": false},{"date": "2010-08-20","amount": 1078,"dateIsDefault": false},{"date": "2010-09-15","amount": 460800,"dateIsDefault": false},{"date": "2010-09-15","amount": 184,"dateIsDefault": false},{"date": "2010-10-21","amount": 375800,"dateIsDefault": false},{"date": "2010-10-21","amount": 1502800,"dateIsDefault": false},{"date": "2010-11-25","amount": 489800,"dateIsDefault": false},{"date": "2010-11-25","amount": 1957502,"dateIsDefault": false},{"date": "2011-01-04","amount": 428800,"dateIsDefault": false},{"date": "2011-01-04","amount": 3131044,"dateIsDefault": false},{"date": "2011-01-27","amount": 653200,"dateIsDefault": false},{"date": "2011-01-27","amount": 3164948,"dateIsDefault": false},{"date": "2011-02-25","amount": 1657838,"dateIsDefault": false},{"date": "2011-02-25","amount": 397000,"dateIsDefault": false},{"date": "2011-03-25","amount": 3033792,"dateIsDefault": false},{"date": "2011-03-25","amount": 510400,"dateIsDefault": false},{"date": "2011-04-28","amount": 2865318,"dateIsDefault": false},{"date": "2011-04-28","amount": 640400,"dateIsDefault": false},{"date": "2011-05-28","amount": 2264098,"dateIsDefault": false},{"date": "2011-05-26","amount": 597000,"dateIsDefault": false},{"date": "2011-06-24","amount": 755200,"dateIsDefault": false},{"date": "2011-06-24","amount": 511468,"dateIsDefault": false},{"date": "2011-07-26","amount": 2343552,"dateIsDefault": false},{"date": "2011-07-26","amount": 417200,"dateIsDefault": false},{"date": "2011-08-26","amount": 2012060,"dateIsDefault": false},{"date": "2011-09-29","amount": 2530960,"dateIsDefault": false},{"date": "2011-10-27","amount": 1121900,"dateIsDefault": false},{"date": "2011-11-30","amount": 10400,"dateIsDefault": false},{"date": "2011-11-30","amount": 2870880,"dateIsDefault": false},{"date": "2011-12-22","amount": 429600,"dateIsDefault": false},{"date": "2011-12-22","amount": 1887560,"dateIsDefault": false},{"date": "2012-01-19","amount": 2536460,"dateIsDefault": false},{"date": "2012-01-19","amount": 2000,"dateIsDefault": false},{"date": "2012-02-24","amount": 2899780,"dateIsDefault": false},{"date": "2012-03-27","amount": 436400,"dateIsDefault": false},{"date": "2012-03-27","amount": 3147518,"dateIsDefault": false},{"date": "2012-04-26","amount": 467400,"dateIsDefault": false},{"date": "2012-04-26","amount": 4520340,"dateIsDefault": false},{"date": "2012-05-28","amount": 465200,"dateIsDefault": false},{"date": "2012-05-28","amount": 3616060,"dateIsDefault": false},{"date": "2012-06-27","amount": 538600,"dateIsDefault": false},{"date": "2012-06-27","amount": 3410736,"dateIsDefault": false},{"date": "2012-07-26","amount": 2052894,"dateIsDefault": false},{"date": "2012-07-26","amount": 1400,"dateIsDefault": false},{"date": "2012-08-28","amount": 2916484,"dateIsDefault": false},{"date": "2012-08-28","amount": 412600,"dateIsDefault": false},{"date": "2012-09-25","amount": 500600,"dateIsDefault": false},{"date": "2012-09-25","amount": 1416414,"dateIsDefault": false},{"date": "2012-10-26","amount": 326200,"dateIsDefault": false},{"date": "2012-10-26","amount": 3426276,"dateIsDefault": false},{"date": "2012-11-29","amount": 555200,"dateIsDefault": false},{"date": "2012-11-29","amount": 3022564,"dateIsDefault": false},{"date": "2012-12-26","amount": 259000,"dateIsDefault": false},{"date": "2012-12-26","amount": 3520940,"dateIsDefault": false},{"date": "2013-01-24","amount": 2969910,"dateIsDefault": false},{"date": "2013-01-24","amount": 263000,"dateIsDefault": false},{"date": "2013-02-27","amount": 487600,"dateIsDefault": false},{"date": "2013-02-26","amount": 3252790,"dateIsDefault": false},{"date": "2013-03-20","amount": 1390486,"dateIsDefault": false},{"date": "2013-03-20","amount": 400,"dateIsDefault": false},{"date": "2013-04-29","amount": 2887309,"dateIsDefault": false},{"date": "2013-04-29","amount": 46800,"dateIsDefault": false},{"date": "2013-05-25","amount": 615600,"dateIsDefault": false},{"date": "2013-05-25","amount": 1986241,"dateIsDefault": false},{"date": "2013-06-25","amount": 1640992,"dateIsDefault": false},{"date": "2013-07-29","amount": 3854228,"dateIsDefault": false},{"date": "2013-08-29","amount": 1000471,"dateIsDefault": false},{"date": "2013-09-23","amount": 4114562,"dateIsDefault": false},{"date": "2013-10-30","amount": 2286578,"dateIsDefault": false},{"date": "2013-11-26","amount": 3428056,"dateIsDefault": false},{"date": "2013-12-26","amount": 3148028,"dateIsDefault": false},{"date": "2014-01-30","amount": 3759696,"dateIsDefault": false},{"date": "2014-02-25","amount": 3797600,"dateIsDefault": false},{"date": "2014-03-25","amount": 3063095,"dateIsDefault": false},{"date": "2014-04-28","amount": 3278328,"dateIsDefault": false},{"date": "2014-05-28","amount": 3126858,"dateIsDefault": false},{"date": "2014-06-27","amount": 3379070,"dateIsDefault": false},{"date": "2014-07-26","amount": 2395082,"dateIsDefault": false},{"date": "2014-08-26","amount": 2596062,"dateIsDefault": false},{"date": "2014-09-29","amount": 4169862,"dateIsDefault": false},{"date": "2014-10-30","amount": 2576932,"dateIsDefault": false},{"date": "2014-11-25","amount": 2941240,"dateIsDefault": false},{"date": "2014-12-27","amount": 1974600,"dateIsDefault": false},{"date": "2015-01-29","amount": 2773202,"dateIsDefault": false},{"date": "2015-02-23","amount": 2736200,"dateIsDefault": false},{"date": "2015-03-26","amount": 2089920,"dateIsDefault": false},{"date": "2015-04-28","amount": 2210896,"dateIsDefault": false},{"date": "2015-05-25","amount": 2290905,"dateIsDefault": false},{"date": "2015-06-24","amount": 3089000,"dateIsDefault": false},{"date": "2015-07-21","amount": 2525478,"dateIsDefault": false},{"date": "2015-08-24","amount": 2737002,"dateIsDefault": false},{"date": "2015-09-29","amount": 2832462,"dateIsDefault": false},{"date": "2015-10-26","amount": 3476042,"dateIsDefault": false},{"date": "2015-11-24","amount": 3855915,"dateIsDefault": false},{"date": "2015-12-27","amount": 4555893,"dateIsDefault": false},{"date": "2016-01-27","amount": 4864200,"dateIsDefault": false},{"date": "2016-02-23","amount": 4925323,"dateIsDefault": false},{"date": "2016-03-26","amount": 5000000,"dateIsDefault": false},{"date": "2016-03-26","amount": 358671,"dateIsDefault": false},{"date": "2016-04-25","amount": 5000000,"dateIsDefault": false},{"date": "2016-04-25","amount": 1912082,"dateIsDefault": false},{"date": "2016-05-23","amount": 3930700,"dateIsDefault": false},{"date": "2016-06-25","amount": 5000000,"dateIsDefault": false},{"date": "2016-06-25","amount": 1454754,"dateIsDefault": false},{"date": "2016-07-25","amount": 1155795,"dateIsDefault": false},{"date": "2016-07-25","amount": 5000000,"dateIsDefault": false},{"date": "2016-08-24","amount": 1195806,"dateIsDefault": false},{"date": "2016-08-24","amount": 5000000,"dateIsDefault": false},{"date": "2016-09-26","amount": 5000000,"dateIsDefault": false},{"date": "2016-09-26","amount": 1013937,"dateIsDefault": false},{"date": "2016-10-25","amount": 3668666,"dateIsDefault": false},{"date": "2016-11-26","amount": 969497,"dateIsDefault": false},{"date": "2016-11-26","amount": 5000000,"dateIsDefault": false},{"date": "2016-12-26","amount": 4600000,"dateIsDefault": false},{"date": "2016-12-29","amount": 1433233,"dateIsDefault": false},{"date": "2017-01-27","amount": 3500000,"dateIsDefault": false},{"date": "2017-01-28","amount": 2441798,"dateIsDefault": false},{"date": "2017-02-24","amount": 4900000,"dateIsDefault": false},{"date": "2017-02-25","amount": 3252714,"dateIsDefault": false},{"date": "2017-03-23","amount": 4074888,"dateIsDefault": false},{"date": "2017-03-24","amount": 3165886,"dateIsDefault": false},{"date": "2017-04-26","amount": 5000000,"dateIsDefault": false},{"date": "2017-04-27","amount": 3715580,"dateIsDefault": false},{"date": "2017-05-24","amount": 4900000,"dateIsDefault": false},{"date": "2017-05-27","amount": 4667369,"dateIsDefault": false},{"date": "2017-06-27","amount": 4500000,"dateIsDefault": false},{"date": "2017-06-28","amount": 4863917,"dateIsDefault": false},{"date": "2017-06-29","amount": 849858,"dateIsDefault": false},{"date": "2017-07-27","amount": 3330477,"dateIsDefault": false},{"date": "2017-07-28","amount": 5000000,"dateIsDefault": false},{"date": "2017-07-29","amount": 2163387,"dateIsDefault": false},{"date": "2017-08-01","amount": 13883784,"dateIsDefault": false},{"date": "2017-08-29","amount": 8955525,"dateIsDefault": false},{"date": "2017-08-23","amount": 2000000,"dateIsDefault": false},{"date": "2017-08-26","amount": 4018112,"dateIsDefault": false},{"date": "2017-08-28","amount": 4728517,"dateIsDefault": false},{"date": "2017-09-27","amount": 8231245,"dateIsDefault": false},{"date": "2017-09-23","amount": 4900000,"dateIsDefault": false},{"date": "2017-09-27","amount": 4977494,"dateIsDefault": false},{"date": "2017-10-24","amount": 6368259,"dateIsDefault": false},{"date": "2017-10-25","amount": 4500000,"dateIsDefault": false},{"date": "2017-10-26","amount": 3141910,"dateIsDefault": false},{"date": "2017-11-25","amount": 2735640,"dateIsDefault": false},{"date": "2017-11-27","amount": 4900000,"dateIsDefault": false},{"date": "2017-11-29","amount": 1463034,"dateIsDefault": false},{"date": "2017-11-23","amount": 4900000,"dateIsDefault": false},{"date": "2017-12-26","amount": 6363034,"dateIsDefault": false},{"date": "2017-12-26","amount": 1633651,"dateIsDefault": false},{"date": "2017-12-26","amount": 6663905,"dateIsDefault": false},{"date": "2018-01-25","amount": 8697425,"dateIsDefault": false},{"date": "2018-01-29","amount": 4767004,"dateIsDefault": false},{"date": "2018-01-30","amount": 1669906,"dateIsDefault": false},{"date": "2018-01-27","amount": 4000000,"dateIsDefault": false},{"date": "2018-02-16","amount": 8689485,"dateIsDefault": false},{"date": "2018-02-22","amount": 4000000,"dateIsDefault": false},{"date": "2018-02-24","amount": 4237632,"dateIsDefault": false},{"date": "2018-02-26","amount": 2189750,"dateIsDefault": false},{"date": "2018-03-19","amount": 4700000,"dateIsDefault": false},{"date": "2018-03-20","amount": 4694645,"dateIsDefault": false},{"date": "2018-03-23","amount": 8159288,"dateIsDefault": false},{"date": "2018-04-25","amount": 8035113,"dateIsDefault": false},{"date": "2018-04-26","amount": 2678372,"dateIsDefault": false},{"date": "2018-04-24","amount": 8927904,"dateIsDefault": false},{"date": "2018-05-25","amount": 9000000,"dateIsDefault": false},{"date": "2018-05-26","amount": 7708506,"dateIsDefault": false},{"date": "2018-05-28","amount": 3919281,"dateIsDefault": false},{"date": "2018-06-21","amount": 8600000,"dateIsDefault": false},{"date": "2018-06-22","amount": 7954851,"dateIsDefault": false},{"date": "2018-06-23","amount": 3332275,"dateIsDefault": false},{"date": "2018-07-18","amount": 9572184,"dateIsDefault": false},{"date": "2018-07-19","amount": 7976820,"dateIsDefault": false},{"date": "2018-08-23","amount": 9500000,"dateIsDefault": false},{"date": "2018-08-25","amount": 672502,"dateIsDefault": false},{"date": "2018-08-25","amount": 8477084,"dateIsDefault": false},{"date": "2018-09-24","amount": 9476422,"dateIsDefault": false},{"date": "2018-09-27","amount": 1147081,"dateIsDefault": false},{"date": "2018-09-28","amount": 8852919,"dateIsDefault": false},{"date": "2018-10-22","amount": 7533654,"dateIsDefault": false},{"date": "2018-10-23","amount": 6278045,"dateIsDefault": false},{"date": "2018-11-19","amount": 6956370,"dateIsDefault": false},{"date": "2018-11-22","amount": 5796975,"dateIsDefault": false},{"date": "2018-12-27","amount": 7488793,"dateIsDefault": false},{"date": "2018-12-28","amount": 6240662,"dateIsDefault": false},{"date": "2019-01-21","amount": 6204929,"dateIsDefault": false},{"date": "2019-01-22","amount": 7445914,"dateIsDefault": false},{"date": "2019-02-22","amount": 8355804,"dateIsDefault": false},{"date": "2019-02-23","amount": 6963170,"dateIsDefault": false},{"date": "2019-03-19","amount": 7853316,"dateIsDefault": false},{"date": "2019-03-20","amount": 6544430,"dateIsDefault": false},{"date": "2019-04-18","amount": 7510715,"dateIsDefault": false},{"date": "2019-04-19","amount": 9012859,"dateIsDefault": false},{"date": "2019-05-23","amount": 7128894,"dateIsDefault": false},{"date": "2019-05-25","amount": 5940745,"dateIsDefault": false},{"date": "2019-06-26","amount": 5758357,"dateIsDefault": false},{"date": "2019-06-27","amount": 4798631,"dateIsDefault": false},{"date": "2019-07-23","amount": 6801737,"dateIsDefault": false},{"date": "2019-07-24","amount": 5668114,"dateIsDefault": false},{"date": "2019-08-20","amount": 6783555,"dateIsDefault": false},{"date": "2019-08-21","amount": 5652963,"dateIsDefault": false},{"date": "2019-09-25","amount": 6197547,"dateIsDefault": false},{"date": "2019-09-26","amount": 5164623,"dateIsDefault": false},{"date": "2019-10-19","amount": 7114330,"dateIsDefault": false},{"date": "2019-10-21","amount": 5928608,"dateIsDefault": false},{"date": "2019-11-21","amount": 7996659,"dateIsDefault": false},{"date": "2019-11-22","amount": 6663883,"dateIsDefault": false},{"date": "2019-12-27","amount": 6840731,"dateIsDefault": false},{"date": "2019-12-27","amount": 8208877,"dateIsDefault": false},{"date": "2020-01-27","amount": 9181697,"dateIsDefault": false},{"date": "2020-01-27","amount": 7651415,"dateIsDefault": false},{"date": "2020-02-24","amount": 7367508,"dateIsDefault": false},{"date": "2020-02-25","amount": 6139590,"dateIsDefault": false},{"date": "2020-04-29","amount": 9000000,"dateIsDefault": false},{"date": "2020-04-29","amount": 6851695,"dateIsDefault": false},{"date": "2020-05-11","amount": 7585440,"dateIsDefault": false},{"date": "2020-05-11","amount": 6321201,"dateIsDefault": false},{"date": "2020-05-21","amount": 29997,"dateIsDefault": false},{"date": "2020-05-21","amount": 24998,"dateIsDefault": false},{"date": "2020-05-30","amount": 238104,"dateIsDefault": false},{"date": "2020-05-30","amount": 76146,"dateIsDefault": false},{"date": "2020-06-30","amount": 8444679,"dateIsDefault": false},{"date": "2020-06-30","amount": 7037233,"dateIsDefault": false},{"date": "2020-07-29","amount": 8525089,"dateIsDefault": false},{"date": "2020-07-29","amount": 7104240,"dateIsDefault": false},{"date": "2020-08-28","amount": 6426467,"dateIsDefault": false},{"date": "2020-08-29","amount": 7711760,"dateIsDefault": false},{"date": "2020-09-23","amount": 9171787,"dateIsDefault": false},{"date": "2020-09-23","amount": 7643155,"dateIsDefault": false},{"date": "2020-10-28","amount": 8000000,"dateIsDefault": false},{"date": "2020-10-28","amount": 2147148,"dateIsDefault": false},{"date": "2020-10-28","amount": 8455957,"dateIsDefault": false},{"date": "2020-11-28","amount": 9282253,"dateIsDefault": false},{"date": "2020-11-28","amount": 7735212,"dateIsDefault": false},{"date": "2020-12-30","amount": 7749426,"dateIsDefault": false},{"date": "2020-12-30","amount": 6457854,"dateIsDefault": false},{"date": "2021-01-27","amount": 9000000,"dateIsDefault": false},{"date": "2021-01-27","amount": 3011434,"dateIsDefault": false},{"date": "2021-01-27","amount": 9100000,"dateIsDefault": false},{"date": "2021-01-27","amount": 909528,"dateIsDefault": false},{"date": "2021-02-26","amount": 2721584,"dateIsDefault": false},{"date": "2021-02-26","amount": 9767987,"dateIsDefault": false},{"date": "2021-02-26","amount": 9000000,"dateIsDefault": false},{"date": "2021-03-25","amount": 9000000,"dateIsDefault": false},{"date": "2021-03-25","amount": 1715585,"dateIsDefault": false},{"date": "2021-03-25","amount": 8929654,"dateIsDefault": false},{"date": "2021-04-23","amount": 9915639,"dateIsDefault": false},{"date": "2021-04-23","amount": 1173840,"dateIsDefault": false},{"date": "2021-04-23","amount": 9146518,"dateIsDefault": false},{"date": "2021-05-27","amount": 8000000,"dateIsDefault": false},{"date": "2021-05-27","amount": 3301869,"dateIsDefault": false},{"date": "2021-05-27","amount": 9418224,"dateIsDefault": false},{"date": "2021-06-26","amount": 8267604,"dateIsDefault": false},{"date": "2021-06-26","amount": 6889670,"dateIsDefault": false},{"date": "2021-07-26","amount": 9000000,"dateIsDefault": false},{"date": "2021-07-26","amount": 2181437,"dateIsDefault": false},{"date": "2021-07-26","amount": 9317864,"dateIsDefault": false},{"date": "2021-08-27","amount": 9000000,"dateIsDefault": false},{"date": "2021-08-27","amount": 1803775,"dateIsDefault": false},{"date": "2021-08-27","amount": 9003146,"dateIsDefault": false},{"date": "2021-09-24","amount": 9000000,"dateIsDefault": false},{"date": "2021-09-24","amount": 2227449,"dateIsDefault": false},{"date": "2021-09-24","amount": 9356208,"dateIsDefault": false},{"date": "2021-10-27","amount": 9000000,"dateIsDefault": false},{"date": "2021-10-27","amount": 1063969,"dateIsDefault": false},{"date": "2021-10-27","amount": 8386641,"dateIsDefault": false},{"date": "2021-11-26","amount": 9000000,"dateIsDefault": false},{"date": "2021-11-26","amount": 3010620,"dateIsDefault": false},{"date": "2021-11-26","amount": 8500000,"dateIsDefault": false},{"date": "2021-11-26","amount": 1508850,"dateIsDefault": false},{"date": "2021-12-28","amount": 8863445,"dateIsDefault": false},{"date": "2021-12-29","amount": 8500000,"dateIsDefault": false},{"date": "2021-12-29","amount": 2136134,"dateIsDefault": false},{"date": "2022-01-28","amount": 9100000,"dateIsDefault": false},{"date": "2022-01-28","amount": 2085131,"dateIsDefault": false},{"date": "2022-01-28","amount": 9320943,"dateIsDefault": false},{"date": "2022-03-01","amount": 8757820,"dateIsDefault": false},{"date": "2022-03-01","amount": 9000000,"dateIsDefault": false},{"date": "2022-03-01","amount": 1509384,"dateIsDefault": false},{"date": "2022-03-28","amount": 8011710,"dateIsDefault": false},{"date": "2022-03-28","amount": 6676426,"dateIsDefault": false},{"date": "2022-04-29","amount": 9000000,"dateIsDefault": false},{"date": "2022-04-29","amount": 2190299,"dateIsDefault": false},{"date": "2022-04-29","amount": 9325250,"dateIsDefault": false},{"date": "2022-05-27","amount": 9000000,"dateIsDefault": false},{"date": "2022-05-27","amount": 1867383,"dateIsDefault": false},{"date": "2022-05-27","amount": 9056153,"dateIsDefault": false},{"date": "2022-06-29","amount": 9100000,"dateIsDefault": false},{"date": "2022-06-29","amount": 1059644,"dateIsDefault": false},{"date": "2022-06-29","amount": 8466370,"dateIsDefault": false},{"date": "2022-07-28","amount": 8486621,"dateIsDefault": false},{"date": "2022-07-28","amount": 9000000,"dateIsDefault": false},{"date": "2022-07-28","amount": 1183945,"dateIsDefault": false},{"date": "2022-08-30","amount": 1815946,"dateIsDefault": false},{"date": "2022-08-30","amount": 9013289,"dateIsDefault": false},{"date": "2022-08-30","amount": 9000000,"dateIsDefault": false},{"date": "2022-09-28","amount": 9000000,"dateIsDefault": false},{"date": "2022-09-28","amount": 1480836,"dateIsDefault": false},{"date": "2022-09-28","amount": 8734030,"dateIsDefault": false},{"date": "2022-10-28","amount": 8184632,"dateIsDefault": false},{"date": "2022-10-28","amount": 6820526,"dateIsDefault": false},{"date": "2022-11-28","amount": 9000000,"dateIsDefault": false},{"date": "2022-11-28","amount": 1311618,"dateIsDefault": false},{"date": "2022-11-28","amount": 8593015,"dateIsDefault": false},{"date": "2022-12-28","amount": 10000,"dateIsDefault": false},{"date": "2022-12-28","amount": 6514,"dateIsDefault": false},{"date": "2022-12-28","amount": 2000000,"dateIsDefault": false},{"date": "2022-12-29","amount": 4500000,"dateIsDefault": false},{"date": "2022-12-29","amount": 4500000,"dateIsDefault": false},{"date": "2022-12-29","amount": 4500000,"dateIsDefault": false},{"date": "2022-12-29","amount": 4672095,"dateIsDefault": false},{"date": "2023-01-30","amount": 4500000,"dateIsDefault": false},{"date": "2023-01-30","amount": 4500000,"dateIsDefault": false},{"date": "2023-01-30","amount": 3188698,"dateIsDefault": false},{"date": "2023-01-30","amount": 4000000,"dateIsDefault": false},{"date": "2023-01-30","amount": 1557248,"dateIsDefault": false},{"date": "2023-02-27","amount": 9100000,"dateIsDefault": false},{"date": "2023-02-27","amount": 3403715,"dateIsDefault": false},{"date": "2023-02-27","amount": 8000000,"dateIsDefault": false},{"date": "2023-02-27","amount": 2419763,"dateIsDefault": false},{"date": "2023-03-24","amount": 5363085,"dateIsDefault": false},{"date": "2023-03-29","amount": 9000000,"dateIsDefault": false},{"date": "2023-03-29","amount": 2044055,"dateIsDefault": false},{"date": "2023-03-29","amount": 9203380,"dateIsDefault": false},{"date": "2023-04-26","amount": 9697661,"dateIsDefault": false},{"date": "2023-04-26","amount": 9100000,"dateIsDefault": false},{"date": "2023-04-26","amount": 2537194,"dateIsDefault": false},{"date": "2023-05-30","amount": 9000000,"dateIsDefault": false},{"date": "2023-05-30","amount": 3506172,"dateIsDefault": false},{"date": "2023-05-30","amount": 9200000,"dateIsDefault": false},{"date": "2023-05-30","amount": 1221810,"dateIsDefault": false},{"date": "2023-06-30","amount": 9151335,"dateIsDefault": false},{"date": "2023-06-30","amount": 7626112,"dateIsDefault": false},{"date": "2023-07-28","amount": 8867760,"dateIsDefault": false},{"date": "2023-07-28","amount": 7389800,"dateIsDefault": false},{"date": "2023-08-28","amount": 8932998,"dateIsDefault": false},{"date": "2023-08-29","amount": 1719599,"dateIsDefault": false},{"date": "2023-08-29","amount": 9000000,"dateIsDefault": false},{"date": "2023-09-28","amount": 4411920,"dateIsDefault": false},{"date": "2023-09-28","amount": 8145838,"dateIsDefault": false},{"date": "2023-10-27","amount": 9447103,"dateIsDefault": false},{"date": "2023-10-27","amount": 2336523,"dateIsDefault": false},{"date": "2023-10-27","amount": 9000000,"dateIsDefault": false},{"date": "2023-11-28","amount": 9000000,"dateIsDefault": false},{"date": "2023-11-28","amount": 1466352,"dateIsDefault": false},{"date": "2023-11-28","amount": 8721960,"dateIsDefault": false},{"date": "2023-12-29","amount": 2938143,"dateIsDefault": false},{"date": "2023-12-29","amount": 4793812,"dateIsDefault": false},{"date": "2024-01-25","amount": 6438131,"dateIsDefault": false},{"date": "2024-01-25","amount": 5365109,"dateIsDefault": false},{"date": "2024-02-27","amount": 8452847,"dateIsDefault": false},{"date": "2024-02-27","amount": 7044039,"dateIsDefault": false},{"date": "2024-03-28","amount": 8099149,"dateIsDefault": false},{"date": "2024-03-28","amount": 6749290,"dateIsDefault": false},{"date": "2024-04-26","amount": 8500999,"dateIsDefault": false},{"date": "2024-04-26","amount": 7084166,"dateIsDefault": false},{"date": "2024-05-28","amount": 7123284,"dateIsDefault": false},{"date": "2024-05-28","amount": 5936070,"dateIsDefault": false},{"date": "2024-06-20","amount": 9252197,"dateIsDefault": false},{"date": "2024-06-20","amount": 7710164,"dateIsDefault": false},{"date": "2024-07-20","amount": 9660678,"dateIsDefault": false},{"date": "2024-07-20","amount": 8050565,"dateIsDefault": false},{"date": "2024-08-19","amount": 9100000,"dateIsDefault": false},{"date": "2024-08-19","amount": 2782664,"dateIsDefault": false},{"date": "2024-08-19","amount": 9902220,"dateIsDefault": false},{"date": "2024-09-19","amount": 7816704,"dateIsDefault": false},{"date": "2024-09-19","amount": 6513920,"dateIsDefault": false},{"date": "2024-10-18","amount": 4149417,"dateIsDefault": false},{"date": "2024-10-18","amount": 3457848,"dateIsDefault": false},{"date": "2024-11-19","amount": 8188578,"dateIsDefault": false},{"date": "2024-11-19","amount": 6823814,"dateIsDefault": false},{"date": "2024-12-20","amount": 3658,"dateIsDefault": false},{"date": "2024-12-20","amount": 8536,"dateIsDefault": false},{"date": "2024-12-20","amount": 9000000,"dateIsDefault": false},{"date": "2024-12-20","amount": 1346001,"dateIsDefault": false},{"date": "2024-12-20","amount": 8621668,"dateIsDefault": false},{"date": "2025-01-18","amount": 2049835,"dateIsDefault": false},{"date": "2025-01-18","amount": 9000000,"dateIsDefault": false},{"date": "2025-01-18","amount": 9208196,"dateIsDefault": false},{"date": "2025-02-27","amount": 7209630,"dateIsDefault": false},{"date": "2025-02-27","amount": 6008025,"dateIsDefault": false},{"date": "2025-03-20","amount": 6133345,"dateIsDefault": false},{"date": "2025-03-20","amount": 5111122,"dateIsDefault": false},{"date": "2025-04-18","amount": 7735872,"dateIsDefault": false},{"date": "2025-04-18","amount": 6446560,"dateIsDefault": false},{"date": "2025-04-23","amount": 23339,"dateIsDefault": false},{"date": "2025-05-20","amount": 5160042,"dateIsDefault": false},{"date": "2025-05-20","amount": 4300034,"dateIsDefault": false},{"date": "2025-06-20","amount": 6286994,"dateIsDefault": false},{"date": "2025-06-20","amount": 7544392,"dateIsDefault": false},{"date": "2025-07-19","amount": 2451138,"dateIsDefault": false},{"date": "2025-07-19","amount": 9542615,"dateIsDefault": false},{"date": "2025-07-19","amount": 9000000,"dateIsDefault": false},{"date": "2025-08-20","amount": 9955744,"dateIsDefault": false},{"date": "2025-08-20","amount": 8296454,"dateIsDefault": false},{"date": "2025-09-20","amount": 7704951,"dateIsDefault": false},{"date": "2025-09-20","amount": 9245941,"dateIsDefault": false},{"date": "2025-10-16","amount": 9000000,"dateIsDefault": false},{"date": "2025-10-16","amount": 2090650,"dateIsDefault": false},{"date": "2025-10-16","amount": 3708780,"dateIsDefault": false},{"date": "2025-10-16","amount": 8500000,"dateIsDefault": false},{"date": "2025-11-18","amount": 2280122,"dateIsDefault": false},{"date": "2025-11-18","amount": 9000000,"dateIsDefault": false},{"date": "2025-11-18","amount": 9400102,"dateIsDefault": false},{"date": "2025-12-20","amount": 7929840,"dateIsDefault": false},{"date": "2025-12-20","amount": 6608200,"dateIsDefault": false}]};
-
-const state = {
-  config: {
-    consumerName: '', yearlyRatePct: 18,
-    initCarryInterest: 0, initArrear: 0, initPrevMonth: 0
+const documents = [
+  {
+    title: "The Odisha Electricity Duty Act",
+    category: "Act",
+    year: 1961,
+    date: "1961",
+    brief: "The parent state act authorising the levy and collection of electricity duty on consumption within Odisha. Forms the legal basis for all later rules, notifications and orders on the subject.",
+    drive: "https://drive.google.com/file/d/FILE_ID_1/view?usp=sharing"
   },
-  months: [],    // [{id, date: Date, dues: number}]
-  payments: []   // [{id, date: Date, amount: number}]
-};
+  {
+    title: "Odisha Electricity Duty (Amendment) Rules",
+    category: "Notification",
+    year: 2021,
+    date: "05 Nov 2021",
+    brief: "Amends the rate schedule and the procedure for assessment and collection of electricity duty from consumers and licensees.",
+    drive: "https://drive.google.com/file/d/FILE_ID_2/view?usp=sharing"
+  },
+  {
+    title: "Notification — Revision of Electricity Duty Rates",
+    category: "Notification",
+    year: 2023,
+    date: "12 Jun 2023",
+    brief: "Revises the electricity duty rate applicable to domestic, commercial and industrial consumer categories with effect from the notified date.",
+    drive: "https://drive.google.com/file/d/FILE_ID_3/view?usp=sharing"
+  },
+  {
+    title: "Policy on Electricity Duty Concession for Renewable Energy Projects",
+    category: "Policy",
+    year: 2022,
+    date: "29 Apr 2022",
+    brief: "Sets out the duty exemption and concession framework available to solar, wind and other renewable power generation projects in the state.",
+    drive: "https://drive.google.com/file/d/FILE_ID_4/view?usp=sharing"
+  },
+  {
+    title: "Order — Exemption of Electricity Duty for Captive Power Plants",
+    category: "Order",
+    year: 2020,
+    date: "14 Jul 2020",
+    brief: "Grants electricity duty exemption to specified categories of captive generating plants, subject to conditions laid out in the order.",
+    drive: "https://drive.google.com/file/d/FILE_ID_5/view?usp=sharing"
+  },
+  {
+    title: "Notification — Electricity Duty Collection Procedure for DISCOMs",
+    category: "Notification",
+    year: 2019,
+    date: "08 Feb 2019",
+    brief: "Lays down the procedure by which distribution companies must collect, account for and remit electricity duty to the state government.",
+    drive: "https://drive.google.com/file/d/FILE_ID_6/view?usp=sharing"
+  },
+  {
+    title: "Order — Electricity Duty Refund Procedure",
+    category: "Order",
+    year: 2018,
+    date: "21 Sep 2018",
+    brief: "Sets out the process and eligibility for consumers or licensees to claim a refund of electricity duty paid in excess or by error.",
+    drive: "https://drive.google.com/file/d/FILE_ID_7/view?usp=sharing"
+  },
+  {
+    title: "The Odisha Electricity Duty (Amendment) Act",
+    category: "Act",
+    year: 2018,
+    date: "2018",
+    brief: "Amends the parent 1961 Act to update duty rate ceilings and bring additional categories of self-generation within its scope.",
+    drive: "https://drive.google.com/file/d/FILE_ID_8/view?usp=sharing"
+  }
+];
 
-let uid = 1;
-function nextId(){ return uid++; }
+/* ===================================================================== */
 
-function loadFromPlainData(data){
-  state.config = Object.assign({
-    consumerName: '', yearlyRatePct: 18, initCarryInterest: 0, initArrear: 0, initPrevMonth: 0
-  }, data.config || {});
-  state.months = (data.months || []).map(m => ({ id: nextId(), date: new Date(m.date), dues: Number(m.dues) || 0 }));
-  state.payments = (data.payments || []).map(p => ({ id: nextId(), date: new Date(p.date), amount: Number(p.amount) || 0, dateIsDefault: !!p.dateIsDefault }));
+const state = { search: "", category: "all", year: "all" };
+
+const categoryOrder = ["Policy", "Notification", "Order", "Act", "Rule"];
+
+function tagClass(category){
+  return category.toLowerCase();
 }
 
-function toPlainData(){
-  return {
-    config: state.config,
-    months: state.months.map(m => ({ date: dateKey(m.date), dues: m.dues })),
-    payments: state.payments.map(p => ({ date: dateKey(p.date), amount: p.amount, dateIsDefault: !!p.dateIsDefault }))
-  };
+function buildChips(){
+  const root = document.getElementById("categoryChips");
+  const cats = ["all", ...categoryOrder.filter(c => documents.some(d => d.category === c))];
+  root.innerHTML = "";
+  cats.forEach(cat => {
+    const btn = document.createElement("button");
+    btn.className = "chip";
+    btn.type = "button";
+    btn.textContent = cat === "all" ? "All documents" : cat + "s";
+    btn.setAttribute("aria-pressed", cat === "all" ? "true" : "false");
+    btn.addEventListener("click", () => {
+      state.category = cat;
+      document.querySelectorAll(".chip").forEach(c => c.setAttribute("aria-pressed", "false"));
+      btn.setAttribute("aria-pressed", "true");
+      render();
+    });
+    root.appendChild(btn);
+  });
 }
 
-/* =========================================================================
-   FORMATTING
-   ========================================================================= */
-
-const fmtMoney = new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2, minimumFractionDigits: 2 });
-const fmtMoney0 = new Intl.NumberFormat('en-IN', { maximumFractionDigits: 0 });
-function money(n){ return '₹' + fmtMoney.format(n || 0); }
-function moneyPlain(n){ return fmtMoney.format(n || 0); }
-function fmtDate(d){
-  if (!d) return '—';
-  const dd = pad2(d.getDate()), mm = pad2(d.getMonth()+1), yyyy = d.getFullYear();
-  return mm + '-' + dd + '-' + yyyy;
-}
-function fmtMonthInput(d){ return d.getFullYear() + '-' + pad2(d.getMonth()+1); }
-function fmtDateInput(d){ return d.getFullYear() + '-' + pad2(d.getMonth()+1) + '-' + pad2(d.getDate()); }
-function parseMonthInput(v){ const [y,m] = v.split('-').map(Number); return new Date(y, m-1, 1); }
-function parseDateInput(v){ const [y,m,d] = v.split('-').map(Number); return new Date(y, m-1, d); }
-
-// DD-MM-YYYY text-field format used throughout the Payment Report and Complete Report tabs
-function fmtDMY(d){ return pad2(d.getDate()) + '-' + pad2(d.getMonth()+1) + '-' + d.getFullYear(); }
-function parseDMY(v){
-  const m = /^(\d{1,2})-(\d{1,2})-(\d{4})$/.exec((v || '').trim());
-  if (!m) return null;
-  const dd = Number(m[1]), mm = Number(m[2]), yyyy = Number(m[3]);
-  const d = new Date(yyyy, mm - 1, dd);
-  if (d.getFullYear() !== yyyy || d.getMonth() !== mm - 1 || d.getDate() !== dd) return null;
-  return d;
+function buildYearFilter(){
+  const select = document.getElementById("yearFilter");
+  const years = [...new Set(documents.map(d => d.year))].sort((a,b) => b - a);
+  years.forEach(y => {
+    const opt = document.createElement("option");
+    opt.value = y;
+    opt.textContent = y;
+    select.appendChild(opt);
+  });
+  select.addEventListener("change", () => {
+    state.year = select.value;
+    render();
+  });
 }
 
-/* =========================================================================
-   RENDER
-   ========================================================================= */
-
-let lastResult = { monthly: new Map(), dailyByPaymentDate: new Map(), warnings: [] };
-
-function recalc(){
-  lastResult = runCalculation(state.config, state.months, state.payments);
-  render();
+function iconSvg(){
+  return '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>';
 }
 
 function render(){
-  renderSettings();
-  renderWarnings();
-  renderMonthly();
-  renderPayment();
-  renderComplete();
-  renderOpeningValues();
-  renderClosingSummary();
-  renderStats();
-  renderTabCount();
-}
+  const q = state.search.trim().toLowerCase();
+  const filtered = documents.filter(d => {
+    const matchesSearch = !q || d.title.toLowerCase().includes(q) || d.brief.toLowerCase().includes(q);
+    const matchesCategory = state.category === "all" || d.category === state.category;
+    const matchesYear = state.year === "all" || String(d.year) === String(state.year);
+    return matchesSearch && matchesCategory && matchesYear;
+  });
 
-function renderOpeningValues(){
-  const box = document.getElementById('printOpeningValuesItems');
-  if (!box) return;
-  const c = state.config;
-  const items = [
-    ['Yearly Interest Rate', c.yearlyRatePct + '% /yr (simple interest)'],
-    ['Opening Carry-Forward Interest', money(c.initCarryInterest)],
-    ['Opening Arrear ED', money(c.initArrear)],
-    ['Opening Previous-Month Due', money(c.initPrevMonth)],
-  ];
-  box.innerHTML = items.map(([label, value]) =>
-    '<div class="ov-item"><span class="ov-label">' + label + '</span><span class="ov-value">' + value + '</span></div>'
-  ).join('');
-}
+  const root = document.getElementById("registerRoot");
+  const count = document.getElementById("resultCount");
+  root.innerHTML = "";
 
-function monthKeyFull(d){ return MONTH_ABBR[d.getMonth()] + '-' + d.getFullYear(); }
+  count.textContent = filtered.length === documents.length
+    ? documents.length + " document" + (documents.length === 1 ? "" : "s") + " on record"
+    : "Showing " + filtered.length + " of " + documents.length + " documents";
 
-function renderClosingSummary(){
-  const box = document.getElementById('closingSummary');
-  if (!box) return;
-
-  if (!state.months.length){
-    box.innerHTML = '<div class="cs-empty">Add at least one month with dues to see the outstanding summary.</div>';
+  if (filtered.length === 0){
+    root.innerHTML = '<div class="empty-state"><strong>No matching documents</strong>Try a different keyword or clear the filters.</div>';
     return;
   }
 
-  const sorted = [...state.months].sort((a,b) => a.date - b.date);
-  const lastEntry = sorted[sorted.length - 1];
-  const lastDate = new Date(lastEntry.date.getFullYear(), lastEntry.date.getMonth(), 1);
-  const key = monthKey(lastDate);
-  const res = lastResult.monthly.get(key);
+  const years = [...new Set(filtered.map(d => d.year))].sort((a,b) => b - a);
 
-  if (!res){
-    box.innerHTML = '<div class="cs-empty">The most recent month (' + monthKeyFull(lastDate) + ') has no calculated figures yet — check the warnings above for a gap, or click Recalculate.</div>';
-    return;
-  }
+  years.forEach(year => {
+    const group = document.createElement("section");
+    group.className = "year-group";
 
-  const monthLabel = monthKeyFull(lastDate);
-  const outstanding = res.outstanding;
-  const intCarry = res.intCarry;
-  const arrearPrincipal = outstanding - intCarry;
+    const heading = document.createElement("h2");
+    heading.className = "year-heading";
+    heading.textContent = year;
+    group.appendChild(heading);
 
-  let totalPayment = 0, totalAdjInterest = 0;
-  lastResult.monthly.forEach((m) => { totalPayment += m.paymentTotal; totalAdjInterest += m.adjInterest; });
+    const list = document.createElement("ul");
+    list.className = "register";
 
-  box.innerHTML =
-    '<div class="cs-title">Outstanding Summary — as of ' + monthLabel + '</div>' +
-    '<div class="cs-block">' +
-      '<div class="cs-row cs-main">' +
-        '<span class="cs-label">Outstanding ED due at the end of ' + monthLabel + '</span>' +
-        '<span class="cs-value">' + money(outstanding) + '</span>' +
-      '</div>' +
-      '<div class="cs-sub">' +
-        '<div class="cs-row"><span class="cs-label">Interest (Int. Carry of ' + monthLabel + ')</span><span class="cs-value">' + money(intCarry) + '</span></div>' +
-        '<div class="cs-row"><span class="cs-label">Arrear / Principal (Outstanding − Interest)</span><span class="cs-value">' + money(arrearPrincipal) + '</span></div>' +
-      '</div>' +
-    '</div>' +
-    '<div class="cs-block">' +
-      '<div class="cs-row cs-main">' +
-        '<span class="cs-label">Payment adjusted towards Interest (due to delayed payment)</span>' +
-        '<span class="cs-value">' + money(totalAdjInterest) + '</span>' +
-      '</div>' +
-      '<div class="cs-formula">out of total payment of ' + money(totalPayment) + '</div>' +
-    '</div>';
-}
+    filtered
+      .filter(d => d.year === year)
+      .forEach(d => {
+        const li = document.createElement("li");
+        li.className = "entry";
+        li.innerHTML = `
+          <div class="entry-main">
+            <div class="entry-meta">
+              <span class="tag ${tagClass(d.category)}">${d.category}</span>
+              <span class="date-stamp">${d.date}</span>
+            </div>
+            <h3 class="entry-title">${d.title}</h3>
+            <p class="entry-brief">${d.brief}</p>
+          </div>
+          <div class="entry-action">
+            <a class="download-link" href="${d.drive}" target="_blank" rel="noopener noreferrer">
+              ${iconSvg()} View / Download
+            </a>
+          </div>
+        `;
+        list.appendChild(li);
+      });
 
-function renderSettings(){
-  document.getElementById('cfg-name').value = state.config.consumerName || '';
-  document.getElementById('cfg-rate').value = state.config.yearlyRatePct;
-  document.getElementById('cfg-carry').value = state.config.initCarryInterest;
-  document.getElementById('cfg-arrear').value = state.config.initArrear;
-  document.getElementById('cfg-prevmonth').value = state.config.initPrevMonth;
-  document.getElementById('consumerNameDisplay').textContent = state.config.consumerName || '(not set)';
-  document.getElementById('rateDisplay').textContent = state.config.yearlyRatePct;
-}
-
-function renderWarnings(){
-  const box = document.getElementById('warnings');
-  box.innerHTML = '';
-  lastResult.warnings.forEach(w => {
-    const el = document.createElement('div');
-    el.className = 'warn';
-    el.textContent = w;
-    box.appendChild(el);
+    group.appendChild(list);
+    root.appendChild(group);
   });
 }
 
-function latestMonthEntry(){
-  if (!state.months.length) return null;
-  const sorted = [...state.months].sort((a,b) => a.date - b.date);
-  const last = sorted[sorted.length - 1];
-  const key = monthKey(new Date(last.date.getFullYear(), last.date.getMonth(), 1));
-  return lastResult.monthly.get(key) || null;
-}
-
-function renderStats(){
-  const row = document.getElementById('statRow');
-  row.innerHTML = '';
-  const totalPaid = state.payments.reduce((s,p) => s + (Number(p.amount)||0), 0);
-  const last = latestMonthEntry();
-  const stats = [
-    { label: 'Months recorded', value: state.months.length ? String(state.months.length) : '—' },
-    { label: 'Payments recorded', value: state.payments.length ? String(state.payments.length) : '—' },
-    { label: 'Total paid to date', value: state.payments.length ? money(totalPaid) : '—' },
-    { label: 'Outstanding (latest month)', value: last ? money(last.outstanding) : '—', cls: last && last.outstanding > 0 ? 'bad' : 'good' },
-    { label: 'Balance incl. current dues', value: last ? money(last.balance) : '—' },
-  ];
-  stats.forEach(s => {
-    const cell = document.createElement('div');
-    cell.className = 'stat';
-    cell.innerHTML = '<div class="label">'+s.label+'</div><div class="value'+(s.cls?' '+s.cls:'')+'">'+s.value+'</div>';
-    row.appendChild(cell);
-  });
-}
-
-function renderTabCount(){
-  const active = document.querySelector('.tab-btn.active').dataset.tab;
-  const el = document.getElementById('tabCount');
-  if (active === 'monthly') el.textContent = state.months.length + ' month' + (state.months.length===1?'':'s');
-  else if (active === 'payment') el.textContent = state.payments.length + ' payment' + (state.payments.length===1?'':'s');
-  else if (active === 'complete') el.textContent = state.months.length + ' month' + (state.months.length===1?'':'s') + ' · ' + state.payments.length + ' payment' + (state.payments.length===1?'':'s');
-  else el.textContent = '';
-}
-
-function renderMonthly(){
-  const body = document.getElementById('monthlyBody');
-  const foot = document.getElementById('monthlyFoot');
-  body.innerHTML = '';
-
-  if (!state.months.length){
-    body.innerHTML = '<tr><td colspan="4" class="empty-state">No months entered yet. Use "Add month" above to begin the ledger.</td></tr>';
-    foot.innerHTML = '';
-    return;
-  }
-
-  const sorted = [...state.months].sort((a,b) => a.date - b.date);
-  let totDues=0;
-
-  sorted.forEach((m, idx) => {
-    const key = monthKey(new Date(m.date.getFullYear(), m.date.getMonth(), 1));
-    const res = lastResult.monthly.get(key);
-    const tr = document.createElement('tr');
-    if (!res) tr.className = 'inactive';
-
-    totDues += m.dues;
-
-    tr.innerHTML =
-      '<td>'+(idx+1)+'</td>'+
-      '<td>'+key+'</td>'+
-      '<td class="editable"><input type="number" step="0.01" data-mid="'+m.id+'" data-field="dues" value="'+m.dues+'"></td>'+
-      '<td><button class="rowdel" data-del-month="'+m.id+'" title="Remove this month">✕</button></td>';
-    body.appendChild(tr);
-  });
-
-  foot.innerHTML =
-    '<tr>'+
-      '<td></td><td>Total</td>'+
-      '<td class="computed">'+moneyPlain(totDues)+'</td>'+
-      '<td></td>'+
-    '</tr>';
-
-  body.querySelectorAll('input[data-field="dues"]').forEach(inp => {
-    inp.addEventListener('change', onMonthDuesChange);
-  });
-  body.querySelectorAll('[data-del-month]').forEach(btn => {
-    btn.addEventListener('click', onDeleteMonth);
-  });
-}
-
-function renderPayment(){
-  const body = document.getElementById('paymentBody');
-  const foot = document.getElementById('paymentFoot');
-  body.innerHTML = '';
-
-  if (!state.payments.length){
-    body.innerHTML = '<tr><td colspan="4" class="empty-state">No payments entered yet. Use "Add payment" above to begin.</td></tr>';
-    foot.innerHTML = '';
-    return;
-  }
-
-  const sorted = [...state.payments].sort((a,b) => a.date - b.date || a.id - b.id);
-  let totPaid=0;
-
-  sorted.forEach((p, idx) => {
-    const tr = document.createElement('tr');
-    totPaid += p.amount;
-
-    tr.innerHTML =
-      '<td>'+(idx+1)+'</td>'+
-      '<td class="editable"><input type="date" class="'+(p.dateIsDefault?'date-default':'')+'" data-pid="'+p.id+'" data-field="date" value="'+fmtDateInput(p.date)+'" title="'+(p.dateIsDefault?'Auto-filled date from bulk upload — please confirm or correct it':'')+'"></td>'+
-      '<td class="editable"><input type="number" step="0.01" data-pid="'+p.id+'" data-field="amount" value="'+p.amount+'"></td>'+
-      '<td><button class="rowdel" data-del-payment="'+p.id+'" title="Remove this payment">✕</button></td>';
-    body.appendChild(tr);
-  });
-
-  foot.innerHTML =
-    '<tr>'+
-      '<td></td><td>Total</td>'+
-      '<td class="computed">'+moneyPlain(totPaid)+'</td>'+
-      '<td></td>'+
-    '</tr>';
-
-  body.querySelectorAll('input[data-field="date"]').forEach(inp => inp.addEventListener('change', onPaymentDateChange));
-  body.querySelectorAll('input[data-field="amount"]').forEach(inp => inp.addEventListener('change', onPaymentAmountChange));
-  body.querySelectorAll('[data-del-payment]').forEach(btn => btn.addEventListener('click', onDeletePayment));
-}
-
-
-function renderComplete(){
-  const body = document.getElementById('completeBody');
-  const foot = document.getElementById('completeFoot');
-  body.innerHTML = '';
-
-  if (!state.months.length){
-    body.innerHTML = '<tr><td colspan="11" class="empty-state">No months entered yet. Add months on the Monthly Report tab, and payments on the Payment Report tab, to build the complete report.</td></tr>';
-    foot.innerHTML = '';
-    return;
-  }
-
-  const sortedMonths = [...state.months].sort((a,b) => a.date - b.date);
-  const sortedPayments = [...state.payments].sort((a,b) => a.date - b.date || a.id - b.id);
-
-  let totDues=0, totAdj=0, totInterest=0, totPay=0;
-
-  sortedMonths.forEach((m, idx) => {
-    const key = monthKey(new Date(m.date.getFullYear(), m.date.getMonth(), 1));
-    const res = lastResult.monthly.get(key);
-    const tr = document.createElement('tr');
-    if (!res) tr.className = 'inactive';
-
-    totDues += m.dues;
-    if (res){ totAdj += res.adjInterest; totInterest += res.interest; totPay += res.paymentTotal; }
-
-    const paymentsThisMonth = sortedPayments.filter(p => monthKey(new Date(p.date.getFullYear(), p.date.getMonth(), 1)) === key);
-
-    let paymentsHtml;
-    if (!paymentsThisMonth.length){
-      paymentsHtml = '<span class="no-payments">No payments</span>';
-    } else {
-      paymentsHtml = paymentsThisMonth.map(p => {
-        const split = lastResult.dailyByPaymentDate.get(dateKey(p.date));
-        const chip = (label, val) => '<span class="adj-chip'+(val?'':' zero')+'"><span class="k">'+label+'</span>'+moneyPlain(val||0)+'</span>';
-        const chipsHtml = split
-          ? '<span class="adj-tag">Adjusted →</span><span class="adj-chips">'+
-              chip('Int', split.interest) +
-              chip('Arr', split.arrear) +
-              chip('PM', split.prevMonth) +
-              chip('Cur', split.current) +
-              chip('Extra', split.extra) +
-            '</span>'
-          : '';
-        return '<div class="pay-row"><span class="pay-main"><span class="pay-date">'+fmtDMY(p.date)+'</span><span class="pay-amount">'+money(p.amount)+'</span></span>'+chipsHtml+'</div>';
-      }).join('');
-    }
-
-    tr.innerHTML =
-      '<td>'+(idx+1)+'</td>'+
-      '<td>'+key+'</td>'+
-      '<td class="computed">'+moneyPlain(m.dues)+'</td>'+
-      '<td class="computed">'+(res?moneyPlain(res.prevMonth):'—')+'</td>'+
-      '<td class="computed">'+(res?moneyPlain(res.arrear):'—')+'</td>'+
-      '<td class="computed'+(res&&res.adjInterest?'':' zero')+'">'+(res?moneyPlain(res.adjInterest):'—')+'</td>'+
-      '<td class="computed'+(res&&res.intCarry?'':' zero')+'">'+(res?moneyPlain(res.intCarry):'—')+'</td>'+
-      '<td class="computed emph">'+(res?moneyPlain(res.interest):'—')+(res?'<span class="ic-chip">Int Carry <b>'+moneyPlain(res.intCarry)+'</b></span>':'')+'</td>'+
-      '<td class="payments-cell">'+paymentsHtml+'</td>'+
-      '<td class="computed emph">'+(res?moneyPlain(res.balance):'—')+'</td>'+
-      '<td class="computed'+(res&&res.outstanding?'':' zero')+'">'+(res?moneyPlain(res.outstanding):'—')+'</td>';
-    body.appendChild(tr);
-  });
-
-  foot.innerHTML =
-    '<tr>'+
-      '<td></td><td>Total</td>'+
-      '<td class="computed">'+moneyPlain(totDues)+'</td>'+
-      '<td></td><td></td>'+
-      '<td class="computed">'+moneyPlain(totAdj)+'</td>'+
-      '<td></td>'+
-      '<td class="computed">'+moneyPlain(totInterest)+'</td>'+
-      '<td class="computed">'+moneyPlain(totPay)+'</td>'+
-      '<td></td><td></td>'+
-    '</tr>';
-}
-
-/* =========================================================================
-   EVENT HANDLERS
-   ========================================================================= */
-
-function onMonthDuesChange(e){
-  const id = Number(e.target.dataset.mid);
-  const m = state.months.find(x => x.id === id);
-  if (m){ m.dues = Number(e.target.value) || 0; recalc(); }
-}
-function onDeleteMonth(e){
-  const id = Number(e.target.dataset.delMonth);
-  state.months = state.months.filter(x => x.id !== id);
-  recalc();
-}
-function onPaymentDateChange(e){
-  const id = Number(e.target.dataset.pid);
-  const p = state.payments.find(x => x.id === id);
-  if (p){ p.date = parseDateInput(e.target.value); p.dateIsDefault = false; recalc(); }
-}
-function onPaymentAmountChange(e){
-  const id = Number(e.target.dataset.pid);
-  const p = state.payments.find(x => x.id === id);
-  if (p){ p.amount = Number(e.target.value) || 0; recalc(); }
-}
-function onDeletePayment(e){
-  const id = Number(e.target.dataset.delPayment);
-  state.payments = state.payments.filter(x => x.id !== id);
-  recalc();
-}
-
-document.getElementById('qa-month-add').addEventListener('click', () => {
-  const mv = document.getElementById('qa-month').value;
-  const dv = document.getElementById('qa-dues').value;
-  if (!mv){ document.getElementById('qa-month').focus(); return; }
-  const date = parseMonthInput(mv);
-  const key = monthKey(date);
-  const existing = state.months.find(m => monthKey(new Date(m.date.getFullYear(), m.date.getMonth(),1)) === key);
-  if (existing){ existing.dues = Number(dv) || 0; }
-  else { state.months.push({ id: nextId(), date, dues: Number(dv) || 0 }); }
-  document.getElementById('qa-dues').value = '';
-  recalc();
+document.getElementById("searchInput").addEventListener("input", (e) => {
+  state.search = e.target.value;
+  render();
 });
 
-/* -------- Bulk import: Upload Excel, column A = Current Month ED, starting from the picked month -------- */
-
-const qaMonthInput = document.getElementById('qa-month');
-const uploadExcelBtn = document.getElementById('uploadExcelBtn');
-const uploadExcelFile = document.getElementById('uploadExcelFile');
-const uploadPaymentsBtn = document.getElementById('uploadPaymentsBtn');
-const uploadPaymentsFile = document.getElementById('uploadPaymentsFile');
-
-function updateUploadBtnState(){
-  const has = !!qaMonthInput.value;
-  uploadExcelBtn.disabled = !has;
-  uploadExcelBtn.title = has ? '' : 'Pick a starting month first';
-}
-qaMonthInput.addEventListener('input', updateUploadBtnState);
-qaMonthInput.addEventListener('change', updateUploadBtnState);
-updateUploadBtnState();
-
-// Shared helper: read a spreadsheet file and pull out the numbers listed down column A
-function readColumnAValues(file, onValues, onError){
-  if (typeof XLSX === 'undefined'){
-    onError('Could not load the spreadsheet reader (needs an internet connection). Please try again once you are online.');
-    return;
-  }
-  const reader = new FileReader();
-  reader.onload = () => {
-    try{
-      const data = new Uint8Array(reader.result);
-      const wb = XLSX.read(data, { type: 'array' });
-      const sheet = wb.Sheets[wb.SheetNames[0]];
-
-      const values = [];
-      let r = 1;
-      while (true){
-        const cell = sheet['A' + r];
-        if (!cell || cell.v === undefined || cell.v === null || cell.v === '') break;
-        let v = typeof cell.v === 'number' ? cell.v : parseFloat(cell.v);
-        if (Number.isNaN(v)) break;
-        v = Number(v.toFixed(2)); // clean up spreadsheet floating-point noise (e.g. 145525.10000009 -> 145525.1)
-        values.push(v);
-        r++;
-      }
-
-      if (!values.length){
-        onError('No numbers were found down column A of that file — check the amounts are listed starting at cell A1.');
-        return;
-      }
-      onValues(values);
-    } catch(err){
-      onError('Could not read that file. Please upload a valid .xlsx, .xls, or .csv file with the amounts listed down column A.');
-    }
-  };
-  reader.readAsArrayBuffer(file);
-}
-
-// Excel's date serial numbers count days from 1899-12-30 (matches the classic 1900 leap-year quirk)
-function excelSerialToDate(serial){
-  const base = new Date(1899, 11, 30);
-  return new Date(base.getFullYear(), base.getMonth(), base.getDate() + Math.round(serial));
-}
-
-// Best-effort parse of a date cell. Deliberately reads the RAW serial number
-// (no cellDates option) and converts it ourselves — SheetJS's own cellDates
-// conversion is timezone-dependent and can land on the wrong calendar day
-// depending on where the browser is running, whereas plain day-count
-// arithmetic on the serial number always gives the same answer everywhere.
-function parseExcelDateCell(cell){
-  if (!cell || cell.v === undefined || cell.v === null || cell.v === '') return null;
-  const v = cell.v;
-  if (typeof v === 'number') return excelSerialToDate(v);
-  // Duck-type rather than `instanceof Date` — SheetJS may run in a different
-  // script realm than the page, where instanceof across realms can fail.
-  if (v && typeof v.getTime === 'function' && !isNaN(v.getTime())){
-    return new Date(v.getUTCFullYear(), v.getUTCMonth(), v.getUTCDate());
-  }
-  if (typeof v === 'string'){
-    const dmy = parseDMY(v.trim());
-    if (dmy) return dmy;
-    const native = new Date(v.trim());
-    if (!isNaN(native.getTime())) return toDateOnly(native);
-  }
-  return null;
-}
-
-// Shared helper: read a spreadsheet file and pull out Date (column A) + Amount (column B) pairs
-function readDateAmountPairs(file, onPairs, onError){
-  if (typeof XLSX === 'undefined'){
-    onError('Could not load the spreadsheet reader (needs an internet connection). Please try again once you are online.');
-    return;
-  }
-  const reader = new FileReader();
-  reader.onload = () => {
-    try{
-      const data = new Uint8Array(reader.result);
-      const wb = XLSX.read(data, { type: 'array' }); // no cellDates — see parseExcelDateCell
-      const sheet = wb.Sheets[wb.SheetNames[0]];
-
-      const pairs = [];
-      const skippedRows = [];
-      let r = 1;
-      while (true){
-        const cellA = sheet['A' + r];
-        const cellB = sheet['B' + r];
-        const aEmpty = !cellA || cellA.v === undefined || cellA.v === null || cellA.v === '';
-        const bEmpty = !cellB || cellB.v === undefined || cellB.v === null || cellB.v === '';
-        if (aEmpty && bEmpty) break; // end of data
-
-        const date = parseExcelDateCell(cellA);
-        let amount = bEmpty ? NaN : (typeof cellB.v === 'number' ? cellB.v : parseFloat(cellB.v));
-        if (!date || Number.isNaN(amount)){
-          skippedRows.push(r);
-        } else {
-          pairs.push({ date, amount: Number(amount.toFixed(2)) });
-        }
-        r++;
-      }
-
-      if (!pairs.length){
-        onError('No valid date/amount pairs were found — check column A has dates and column B has the matching amounts, starting at row 1.');
-        return;
-      }
-      onPairs(pairs, skippedRows);
-    } catch(err){
-      onError('Could not read that file. Please upload a valid .xlsx, .xls, or .csv file with dates in column A and amounts in column B.');
-    }
-  };
-  reader.readAsArrayBuffer(file);
-}
-
-uploadExcelBtn.addEventListener('click', () => {
-  if (!qaMonthInput.value) return;
-  uploadExcelFile.click();
-});
-
-uploadExcelFile.addEventListener('change', (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
-  const mv = qaMonthInput.value;
-  if (!mv){ alert('Pick a starting month first.'); e.target.value = ''; return; }
-  const startDate = parseMonthInput(mv);
-
-  readColumnAValues(file, (values) => {
-    values.forEach((val, idx) => {
-      const d = new Date(startDate.getFullYear(), startDate.getMonth() + idx, 1);
-      const key = monthKey(d);
-      const existing = state.months.find(m => monthKey(new Date(m.date.getFullYear(), m.date.getMonth(), 1)) === key);
-      if (existing){ existing.dues = val; }
-      else { state.months.push({ id: nextId(), date: d, dues: val }); }
-    });
-    recalc();
-    const endMonth = monthKey(new Date(startDate.getFullYear(), startDate.getMonth() + values.length - 1, 1));
-    alert('Imported ' + values.length + ' month' + (values.length === 1 ? '' : 's') + ' of dues, from ' + monthKey(startDate) + ' to ' + endMonth + '.');
-  }, (msg) => alert(msg));
-
-  e.target.value = '';
-});
-
-/* -------- Bulk import: Upload Excel, column A = Date, column B = Payment (A1/B1, A2/B2, ...) -------- */
-
-uploadPaymentsBtn.addEventListener('click', () => {
-  uploadPaymentsFile.click();
-});
-
-uploadPaymentsFile.addEventListener('change', (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
-
-  readDateAmountPairs(file, (pairs, skippedRows) => {
-    pairs.forEach(({ date, amount }) => {
-      state.payments.push({ id: nextId(), date, amount, dateIsDefault: false });
-    });
-    recalc();
-    let msg = 'Imported ' + pairs.length + ' payment' + (pairs.length === 1 ? '' : 's') + ' with their own dates from columns A (date) and B (amount).';
-    if (skippedRows.length){
-      msg += ' Skipped ' + skippedRows.length + ' row' + (skippedRows.length === 1 ? '' : 's') + ' with a missing or unreadable date/amount (row' + (skippedRows.length === 1 ? '' : 's') + ' ' + skippedRows.join(', ') + ').';
-    }
-    alert(msg);
-  }, (msg) => alert(msg));
-
-  e.target.value = '';
-});
-
-document.getElementById('qa-payment-add').addEventListener('click', () => {
-  const dv = document.getElementById('qa-date').value;
-  const av = document.getElementById('qa-amount').value;
-  if (!dv){ document.getElementById('qa-date').focus(); return; }
-  state.payments.push({ id: nextId(), date: parseDateInput(dv), amount: Number(av) || 0 });
-  document.getElementById('qa-date').value = '';
-  document.getElementById('qa-amount').value = '';
-  recalc();
-});
-
-['cfg-name','cfg-rate','cfg-carry','cfg-arrear','cfg-prevmonth'].forEach(id => {
-  document.getElementById(id).addEventListener('change', () => {
-    state.config.consumerName = document.getElementById('cfg-name').value;
-    state.config.yearlyRatePct = Number(document.getElementById('cfg-rate').value) || 0;
-    state.config.initCarryInterest = Number(document.getElementById('cfg-carry').value) || 0;
-    state.config.initArrear = Number(document.getElementById('cfg-arrear').value) || 0;
-    state.config.initPrevMonth = Number(document.getElementById('cfg-prevmonth').value) || 0;
-    recalc();
-  });
-});
-
-document.getElementById('openSettingsBtn').addEventListener('click', () => {
-  document.getElementById('settingsDetails').open = true;
-  document.getElementById('settingsDetails').scrollIntoView({behavior:'smooth', block:'start'});
-});
-
-document.getElementById('recalcBtn1').addEventListener('click', recalc);
-document.getElementById('recalcBtn2').addEventListener('click', recalc);
-document.getElementById('recalcBtn3').addEventListener('click', recalc);
-
-let printAuthorized = false;
-
-document.getElementById('savePdfBtn').addEventListener('click', () => {
-  const prevTitle = document.title;
-  try{
-    const name = (state.config.consumerName || 'Ledger').trim();
-    const stamp = new Date().toISOString().slice(0,10);
-    // Kept short: some browsers print this as a header/footer line on every page,
-    // and a long title is more likely to get clipped in landscape mode.
-    document.title = name + ' ' + stamp;
-    printAuthorized = true;
-    window.print();
-  } catch(err){
-    alert('Could not open the print dialog. Try Ctrl+P (Cmd+P on Mac) instead, then choose "Save as PDF" as the destination.');
-  } finally {
-    setTimeout(() => { document.title = prevTitle; }, 1000);
-  }
-});
-
-document.querySelectorAll('.tab-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById('panel-monthly').hidden = btn.dataset.tab !== 'monthly';
-    document.getElementById('panel-payment').hidden = btn.dataset.tab !== 'payment';
-    document.getElementById('panel-complete').hidden = btn.dataset.tab !== 'complete';
-    document.getElementById('panel-howto').hidden = btn.dataset.tab !== 'howto';
-    renderTabCount();
-  });
-});
-
-document.getElementById('exportBtn').addEventListener('click', () => {
-  const data = toPlainData();
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  const safeName = (state.config.consumerName || 'ledger').replace(/[^a-z0-9]+/gi,'_');
-  a.href = url; a.download = 'duty_ledger_' + safeName + '.json';
-  document.body.appendChild(a); a.click(); document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-});
-
-document.getElementById('importBtn').addEventListener('click', () => {
-  document.getElementById('importFile').click();
-});
-document.getElementById('importFile').addEventListener('change', (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = () => {
-    try{
-      const data = JSON.parse(reader.result);
-      loadFromPlainData(data);
-      recalc();
-    } catch(err){
-      alert('Could not read that file — make sure it is a ledger .json file exported from this page.');
-    }
-  };
-  reader.readAsText(file);
-  e.target.value = '';
-});
-
-document.getElementById('loadSampleBtn').addEventListener('click', () => {
-  if (state.months.length || state.payments.length){
-    if (!confirm('This replaces all current data with the M/s XYZ Ltd example ledger. Continue?')) return;
-  }
-  loadFromPlainData(SAMPLE_DATA);
-  document.getElementById('settingsDetails').open = false;
-  recalc();
-});
-
-document.getElementById('clearBtn').addEventListener('click', () => {
-  if (!confirm('This clears every month, payment, and opening balance. Continue?')) return;
-  loadFromPlainData(EMPTY_DATA);
-  recalc();
-});
-
-/* =========================================================================
-   OPTIONAL: silent persistence via window.storage, when available
-   ========================================================================= */
-
-async function trySaveToWindowStorage(){
-  try{
-    if (window.storage && window.storage.set){
-      await window.storage.set('duty-ledger-data', JSON.stringify(toPlainData()), false);
-    }
-  } catch(e){ /* not available outside the Claude environment — ignore */ }
-}
-async function tryLoadFromWindowStorage(){
-  try{
-    if (window.storage && window.storage.get){
-      const res = await window.storage.get('duty-ledger-data', false);
-      if (res && res.value) return JSON.parse(res.value);
-    }
-  } catch(e){ /* not available — ignore */ }
-  return null;
-}
-
-const debouncedSave = (() => {
-  let t = null;
-  return () => { clearTimeout(t); t = setTimeout(trySaveToWindowStorage, 600); };
-})();
-const _origRecalc = recalc;
-recalc = function(){ _origRecalc(); debouncedSave(); };
-
-/* =========================================================================
-   PRINT LOCK — page-wide
-   Ctrl/Cmd+P is blocked everywhere on the page, not just on the Complete
-   Report tab, so a PDF can only be produced through the "Save as PDF" button.
-   As a second layer, since JS cannot actually cancel a print started from the
-   browser's own Print menu (only keyboard shortcuts can be intercepted),
-   any print that fires without going through that button renders as a
-   blank, clearly-labelled page instead of the real report.
-   ========================================================================= */
-
-document.addEventListener('keydown', (e) => {
-  const k = e.key ? e.key.toLowerCase() : '';
-  const isPrintShortcut = (e.ctrlKey || e.metaKey) && k === 'p';
-  if (isPrintShortcut){
-    e.preventDefault();
-    e.stopPropagation();
-    const completeTab = document.querySelector('.tab-btn[data-tab="complete"]');
-    if (completeTab && !completeTab.classList.contains('active')) completeTab.click();
-    const btn = document.getElementById('savePdfBtn');
-    if (btn) btn.focus();
-    return false;
-  }
-}, true);
-
-window.addEventListener('beforeprint', () => {
-  if (!printAuthorized) document.body.classList.add('print-blocked');
-});
-window.addEventListener('afterprint', () => {
-  document.body.classList.remove('print-blocked');
-  printAuthorized = false;
-});
-
-/* =========================================================================
-   COPY PROTECTION — Complete Report tab only
-   (A deterrent against casual copy/paste, not a hard security guarantee —
-   anyone with dev tools or a screenshot can still get the numbers out.)
-   ========================================================================= */
-
-(function(){
-  const guarded = document.getElementById('panel-complete');
-
-  const block = (e) => { e.preventDefault(); return false; };
-  guarded.addEventListener('copy', block);
-  guarded.addEventListener('cut', block);
-  guarded.addEventListener('contextmenu', block);
-  guarded.addEventListener('dragstart', block);
-
-  guarded.addEventListener('keydown', (e) => {
-    const k = e.key ? e.key.toLowerCase() : '';
-    const combo = (e.ctrlKey || e.metaKey) && ['c','x','a'].includes(k);
-    if (combo){ e.preventDefault(); return false; }
-  });
-
-  guarded.addEventListener('selectstart', block);
-})();
-
-/* =========================================================================
-   INIT
-   ========================================================================= */
-
-const EMPTY_DATA = { config: { consumerName:'', yearlyRatePct:18, initCarryInterest:0, initArrear:0, initPrevMonth:0 }, months: [], payments: [] };
-
-(async function init(){
-  const saved = await tryLoadFromWindowStorage();
-  loadFromPlainData(saved || EMPTY_DATA);
-  recalc();
-})();
-
-})();
+buildChips();
+buildYearFilter();
+render();
 </script>
+
 </body>
 </html>
